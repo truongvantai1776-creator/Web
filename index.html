@@ -1,32 +1,586 @@
-                  <i data-lucide="check-circle-2" class="w-6 h-6 text-green-500 shrink-0 mt-0.5"></i>
-                  <div class="w-full">
-                    <p class="text-xs text-gray-400 uppercase font-bold tracking-wider">Mã Key Của Bạn:</p>
-                    <div class="mt-2 bg-dragon-card border border-dragon-red/30 p-3 rounded-lg flex items-center justify-between">
-                      <code id="key-output" class="font-mono font-bold text-dragon-red text-base tracking-widest">DRAGON-998A-43F1-X771</code>
-                      <button 
-                        onclick="copyKey()" 
-                        class="flex items-center gap-1.5 px-3 py-1.5 bg-dragon-red/20 hover:bg-dragon-red text-white text-xs font-bold rounded-lg transition-all"
-                      >
-                        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                        <span id="copy-text">COPY KEY</span>
-                      </button>
-                    </div>
-                    <p class="mt-2 text-[11px] text-gray-400 flex items-center gap-1">
-                      <i data-lucide="clock" class="w-3 h-3 text-dragon-red"></i>
-                      Thời hạn: <span class="text-white font-semibold">24 Giờ</span>
-                    </p>
-                  </div>
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T HUB - Secure Key Verification System</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            900: '#050b14',
+                            800: '#0b162c',
+                            700: '#132347',
+                            600: '#1d3566',
+                            500: '#2563eb',
+                            400: '#3b82f6',
+                            300: '#60a5fa',
+                            neon: '#00f0ff',
+                            accent: '#7000ff'
+                        }
+                    },
+                    boxShadow: {
+                        'neon': '0 0 20px rgba(0, 240, 255, 0.4)',
+                        'neon-lg': '0 0 35px rgba(0, 240, 255, 0.7)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050b14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1d3566;
+            border-radius: 4px;
+        }
+        .cyber-border {
+            position: relative;
+            background: linear-gradient(135deg, rgba(19, 35, 71, 0.7), rgba(5, 11, 20, 0.9));
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            backdrop-filter: blur(12px);
+        }
+        .cyber-border::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 10px; height: 10px;
+            border-top: 2px solid #00f0ff;
+            border-left: 2px solid #00f0ff;
+        }
+        .cyber-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0; right: 0; width: 10px; height: 10px;
+            border-bottom: 2px solid #00f0ff;
+            border-right: 2px solid #00f0ff;
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-cyber-900 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyber-700 via-cyber-900 to-black">
+
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3"></div>
+
+    <nav class="border-b border-cyber-600/50 bg-cyber-900/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center shadow-neon">
+                    <i class="fa-solid fa-cube text-black font-black text-lg"></i>
                 </div>
-              </div>
-
+                <div>
+                    <span class="font-orbitron font-black text-2xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">T HUB</span>
+                    <span class="block text-[10px] tracking-widest text-cyan-400 uppercase font-semibold">Secure Key Portal</span>
+                </div>
             </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-3 pt-2 max-w-xl mx-auto lg:mx-0">
-            <div class="p-3 glass-card rounded-xl flex flex-col items-center justify-center text-center">
-              <i data-lucide="zap" class="w-5 h-5 text-dragon-red mb-1"></i>
-              <span class="text-xs font-bold text-white">Xử Lý Nhanh</span>
-              <span class="text-[10px] text-gray-400">Chỉ vài giây</span>
+            
+            <div class="hidden md:flex items-center space-x-6">
+                <button onclick="switchTab('home')" class="text-cyan-400 hover:text-white transition font-medium text-sm flex items-center gap-2"><i class="fa-solid fa-house"></i> Trang Chủ</button>
+                <button onclick="switchTab('getkey')" class="text-gray-400 hover:text-cyan-400 transition font-medium text-sm flex items-center gap-2"><i class="fa-solid fa-key"></i> Get Key</button>
+                <button onclick="switchTab('device')" class="text-gray-400 hover:text-cyan-400 transition font-medium text-sm flex items-center gap-2"><i class="fa-solid fa-laptop-code"></i> Quản Lý Thiết Bị</button>
+                <button id="nav-admin-btn" onclick="switchTab('admin')" class="hidden text-gray-400 hover:text-cyan-400 transition font-medium text-sm flex items-center gap-2"><i class="fa-solid fa-shield-halved"></i> Quản Trị Admin</button>
             </div>
-            <div class="p-3 glass-card rounded-xl flex flex-col items-center justify-center text-center">
-              <i data-lucide="shield-check" class="w-5 h-5 text-dragon-red mb-1"></i>
+
+            <div class="flex items-center space-x-4">
+                <div id="auth-nav-container">
+                    <button onclick="openAuthModal()" class="px-5 py-2.5 rounded-xl border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 font-orbitron text-xs font-semibold tracking-wider transition shadow-neon">
+                        ĐĂNG NHẬP
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+
+        <!-- VIEW: HOME -->
+        <section id="view-home" class="view-section transition-all duration-300">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-12">
+                <div class="space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-cyan-400 text-xs font-semibold tracking-wide">
+                        <i class="fa-solid fa-bolt text-cyan-400"></i> UNIQUE DEVICE KEY SYSTEM
+                    </div>
+                    <h1 class="font-orbitron font-black text-4xl sm:text-6xl tracking-tight leading-none text-white">
+                        MORE THAN JUST A HUB <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 glow-text">IT'S YOUR SPACE</span>
+                    </h1>
+                    <p class="text-gray-400 text-base leading-relaxed">
+                        Hệ thống cấp key ngẫu nhiên độc lập tuyệt đối cho từng thiết bị (HWID Binding). Không trùng lặp, chống gian lận với quy trình vượt link thông minh.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <button onclick="switchTab('getkey')" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-orbitron font-bold text-sm tracking-wider hover:shadow-neon-lg transition transform hover:-translate-y-0.5 flex items-center gap-3">
+                            <i class="fa-solid fa-key"></i> BẮT ĐẦU GET KEY
+                        </button>
+                        <button onclick="switchTab('device')" class="px-8 py-4 rounded-xl cyber-border text-cyan-400 hover:bg-cyber-700/50 font-orbitron font-bold text-sm tracking-wider transition flex items-center gap-3">
+                            <i class="fa-solid fa-fingerprint"></i> KIỂM TRA THIẾT BỊ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative flex justify-center">
+                    <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-500 to-purple-600 opacity-30 blur-2xl"></div>
+                    <div class="relative cyber-border p-8 rounded-3xl w-full max-w-md shadow-2xl space-y-6">
+                        <div class="flex items-center justify-between border-b border-cyber-600/50 pb-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                                <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                            </div>
+                            <span class="font-orbitron text-xs text-cyan-400 font-bold tracking-widest">HWID PROTECTED</span>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="p-4 rounded-xl bg-cyber-800/80 border border-cyan-500/20 flex items-center justify-between">
+                                <div>
+                                    <div class="text-xs text-gray-400">Mã Thiết Bị Của Bạn</div>
+                                    <div id="hero-hwid-display" class="font-orbitron font-bold text-sm text-cyan-300">Đang quét...</div>
+                                </div>
+                                <button onclick="copyHwId()" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 text-xs font-semibold"><i class="fa-solid fa-copy"></i></button>
+                            </div>
+                            <div class="p-4 rounded-xl bg-cyber-800/80 border border-blue-500/20 flex items-center justify-between">
+                                <div>
+                                    <div class="text-xs text-gray-400">Trạng Thái Key Của Máy</div>
+                                    <div id="hero-key-status" class="font-orbitron font-bold text-sm text-yellow-400">Chưa có key</div>
+                                </div>
+                                <span id="hero-key-badge" class="text-xs text-yellow-400 bg-yellow-500/10 px-2.5 py-1 rounded-full">Cần Get Key</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: GET KEY (SINGLE LINK TASK & VERIFICATION) -->
+        <section id="view-getkey" class="view-section hidden py-8">
+            <div class="max-w-3xl mx-auto space-y-8">
+                <div class="text-center space-y-3">
+                    <h2 class="font-orbitron font-black text-3xl sm:text-4xl text-white">HỆ THỐNG GET KEY THIẾT BỊ</h2>
+                    <p class="text-gray-400 text-sm">Hoàn thành 1 bước vượt link rút gọn duy nhất để hệ thống cấp key ngẫu nhiên độc quyền gắn chết với thiết bị của bạn.</p>
+                </div>
+
+                <!-- HWID Banner -->
+                <div class="cyber-border p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-gray-400 font-semibold">MÃ HWID THIẾT BỊ NÀY</div>
+                            <div id="current-user-hwid" class="font-orbitron font-bold text-cyan-300 text-sm sm:text-base">TH-DEV-99A8F1</div>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield"></i> Khóa Riêng Biệt
+                    </span>
+                </div>
+
+                <!-- Single Link Task Container -->
+                <div class="cyber-border p-6 sm:p-8 rounded-3xl space-y-6">
+                    <div class="flex items-center justify-between border-b border-cyber-600/50 pb-4">
+                        <h3 class="font-orbitron font-bold text-lg text-white flex items-center gap-2">
+                            <i class="fa-solid fa-link text-cyan-400"></i> Nhiệm Vụ Vượt Link Get Key
+                        </h3>
+                        <span id="getkey-status-label" class="text-xs font-semibold bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full">Chưa hoàn thành</span>
+                    </div>
+
+                    <!-- Task Instructions / Action Box -->
+                    <div id="task-action-container" class="p-6 rounded-2xl bg-cyber-800/80 border border-cyber-600/50 space-y-4 text-center">
+                        <div class="w-16 h-16 mx-auto rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-2xl">
+                            <i class="fa-solid fa-globe"></i>
+                        </div>
+                        <div class="space-y-1">
+                            <h4 class="font-orbitron font-bold text-white text-base">Bước 1: Truy cập Trạm Lấy Key Khác</h4>
+                            <p class="text-xs text-gray-400 max-w-md mx-auto">Nhấn nút bên dưới để mở trang web get key độc lập. Sau khi hoàn thành vượt link tại trang đó, hệ thống sẽ tự động xác nhận và đưa bạn trở lại đây nhận key.</p>
+                        </div>
+                        <button onclick="openExternalGetLink()" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-orbitron font-bold text-sm tracking-wider shadow-neon hover:shadow-neon-lg transition inline-flex items-center gap-3">
+                            <i class="fa-solid fa-external-link-alt"></i> ĐẾN TRANG GET KEY NGAY
+                        </button>
+                    </div>
+
+                    <!-- Result Key Display (Hiển thị sau khi hoàn thành link) -->
+                    <div id="result-key-container" class="hidden p-6 rounded-2xl bg-gradient-to-r from-blue-900/40 to-cyan-900/40 border border-cyan-500/50 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider"><i class="fa-solid fa-circle-check"></i> Key Riêng Biệt Cho Thiết Bị Này:</span>
+                            <span class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded border border-green-500/30">Đã Xác Thực Hoàn Tất</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="generated-key-input" readonly class="w-full bg-cyber-900 border border-cyan-500/40 rounded-xl px-4 py-3 font-orbitron text-white text-sm focus:outline-none" value="">
+                            <button onclick="copyGeneratedKey()" class="px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-semibold text-xs transition shadow-neon">
+                                <i class="fa-solid fa-copy"></i> Sao chép
+                            </button>
+                        </div>
+                        <p class="text-[11px] text-gray-400"><i class="fa-solid fa-lock text-cyan-400"></i> Key này được sinh ngẫu nhiên hoàn toàn không trùng lặp và chỉ hoạt động duy nhất trên thiết bị (HWID) này.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXTERNAL GET KEY PAGE SIMULATION (Dùng chung 1 file nhưng ẩn hiện giao diện mô phỏng trang get key bên thứ 3) -->
+        <section id="view-external-getpage" class="view-section hidden py-16">
+            <div class="max-w-md mx-auto cyber-border p-8 rounded-3xl space-y-6 text-center">
+                <div class="w-16 h-16 mx-auto rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 text-2xl animate-pulse">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="space-y-2">
+                    <h2 class="font-orbitron font-black text-xl text-white">TRANG TRUNG CHUYỂN GET KEY</h2>
+                    <p class="text-xs text-gray-400">Vui lòng chờ đếm ngược 5 giây hoặc hoàn thành xác thực chống bot để lấy quyền chuyển về web chính.</p>
+                </div>
+                <div id="countdown-timer" class="font-orbitron font-black text-4xl text-cyan-400">5</div>
+                <button id="btn-complete-external" disabled onclick="completeExternalTask()" class="w-full py-4 rounded-xl bg-gray-700 text-gray-500 font-orbitron font-bold text-xs tracking-wider cursor-not-allowed transition">
+                    ĐANG XÁC THỰC VƯỢT LINK...
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW: DEVICE MANAGEMENT -->
+        <section id="view-device" class="view-section hidden py-8">
+            <div class="max-w-3xl mx-auto space-y-8">
+                <div class="text-center space-y-3">
+                    <h2 class="font-orbitron font-black text-3xl sm:text-4xl text-white">QUẢN LÝ THIẾT BỊ & HWID</h2>
+                    <p class="text-gray-400 text-sm">Kiểm tra thông tin định danh trình duyệt và trạng thái key của thiết bị này.</p>
+                </div>
+
+                <div class="cyber-border p-6 sm:p-8 rounded-3xl space-y-6">
+                    <div class="flex items-center justify-between border-b border-cyber-600/50 pb-4">
+                        <h3 class="font-orbitron font-bold text-lg text-white flex items-center gap-2">
+                            <i class="fa-solid fa-fingerprint text-cyan-400"></i> Thông Tin Phần Cứng Thiết Bị
+                        </h3>
+                        <span class="text-xs bg-green-500/10 text-green-400 px-3 py-1 rounded-full border border-green-500/30">Active HWID</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="p-4 rounded-2xl bg-cyber-800/80 border border-cyber-600/50 space-y-1">
+                            <span class="text-xs text-gray-400">Mã Định Danh HWID</span>
+                            <div id="dev-hwid" class="font-orbitron font-bold text-cyan-300 text-sm">TH-DEV-99A8F1</div>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-cyber-800/80 border border-cyber-600/50 space-y-1">
+                            <span class="text-xs text-gray-400">Trạng Thái Get Key Link</span>
+                            <div id="dev-link-status" class="font-orbitron font-bold text-yellow-400 text-sm">Chưa hoàn thành</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: ADMIN DASHBOARD -->
+        <section id="view-admin" class="view-section hidden py-8">
+            <div class="space-y-8">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="font-orbitron font-black text-3xl text-white">TRANG QUẢN TRỊ ADMIN</h2>
+                        <p class="text-gray-400 text-sm">Quản lý toàn bộ key ngẫu nhiên đã cấp cho từng thiết bị.</p>
+                    </div>
+                    <button onclick="renderAdminTable()" class="px-5 py-2.5 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 font-orbitron font-bold text-xs hover:bg-cyan-500/30 transition">
+                        <i class="fa-solid fa-rotate mr-1"></i> Làm mới dữ liệu
+                    </button>
+                </div>
+
+                <div class="cyber-border rounded-3xl overflow-hidden shadow-2xl">
+                    <div class="p-6 border-b border-cyber-600/50 flex items-center justify-between">
+                        <h3 class="font-orbitron font-bold text-lg text-white"><i class="fa-solid fa-key text-cyan-400 mr-2"></i> Danh Sách Key & Thiết Bị (HWID)</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-cyber-800/80 border-b border-cyber-600/50 text-[11px] font-orbitron text-cyan-400 uppercase tracking-wider">
+                                    <th class="p-4">Key Bản Quyền (Duy Nhất)</th>
+                                    <th class="p-4">HWID Thiết Bị</th>
+                                    <th class="p-4">Trạng Thái Link</th>
+                                    <th class="p-4 text-right">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-keys-tbody" class="divide-y divide-cyber-600/30 text-sm text-gray-300">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- AUTH MODAL -->
+    <div id="auth-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="cyber-border p-8 rounded-3xl w-full max-w-md relative space-y-6">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-cyan-400 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            <div class="text-center space-y-2">
+                <h3 class="font-orbitron font-black text-2xl text-white">ĐĂNG NHẬP QUẢN TRỊ</h3>
+                <p class="text-xs text-gray-400">Truy cập bảng điều khiển Admin</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <label class="text-xs text-gray-400 font-semibold">Tài Khoản</label>
+                    <input type="text" id="auth-username" placeholder="Nhập admin" class="w-full bg-cyber-900 border border-cyber-600 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" value="admin">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs text-gray-400 font-semibold">Mật Khẩu</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-cyber-900 border border-cyber-600 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" value="admin123">
+                </div>
+                <button onclick="handleAuthSubmit()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-orbitron font-bold text-xs tracking-wider shadow-neon hover:shadow-neon-lg transition">
+                    ĐĂNG NHẬP NGAY
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // LocalStorage DB Initialization with HWID uniqueness check
+        let deviceHwId = localStorage.getItem('thub_hwid');
+        if (!deviceHwId) {
+            deviceHwId = 'TH-HWID-' + Math.random().toString(36).substring(2, 8).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            localStorage.setItem('thub_hwid', deviceHwId);
+        }
+
+        let appState = {
+            currentUser: null,
+            hwid: deviceHwId,
+            linkCompleted: localStorage.getItem('thub_link_completed_' + deviceHwId) === 'true',
+            assignedKey: localStorage.getItem('thub_key_' + deviceHwId) || null,
+            databaseKeys: JSON.parse(localStorage.getItem('thub_db_keys') || '[]')
+        };
+
+        window.onload = function() {
+            document.getElementById('current-user-hwid').innerText = appState.hwid;
+            document.getElementById('dev-hwid').innerText = appState.hwid;
+            document.getElementById('hero-hwid-display').innerText = appState.hwid;
+            
+            updateUIAfterStateChange();
+            renderAdminTable();
+
+            // Check if returning from external link via URL parameter ?completed=true
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('completed') === 'true') {
+                appState.linkCompleted = true;
+                localStorage.setItem('thub_link_completed_' + appState.hwid, 'true');
+                
+                // Generate unique key if not already assigned
+                if (!appState.assignedKey) {
+                    appState.assignedKey = generateUniqueRandomKey();
+                    localStorage.setItem('thub_key_' + appState.hwid, appState.assignedKey);
+                    
+                    // Save to global DB list
+                    appState.databaseKeys.push({
+                        hwid: appState.hwid,
+                        key: appState.assignedKey,
+                        status: 'Completed'
+                    });
+                    localStorage.setItem('thub_db_keys', JSON.stringify(appState.databaseKeys));
+                }
+                
+                showToast('Xác thực vượt link thành công! Đã cấp key cho thiết bị.');
+                window.history.replaceState({}, document.title, window.location.pathname);
+                switchTab('getkey');
+            }
+        };
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            let icon = type === 'success' ? 'fa-circle-check text-cyan-400' : 'fa-circle-exclamation text-red-400';
+            
+            toast.className = `cyber-border px-5 py-4 rounded-2xl flex items-center space-x-3 shadow-2xl transition-all transform translate-y-2 opacity-0`;
+            toast.style.background = 'rgba(5, 11, 20, 0.95)';
+            toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i><span class="text-sm font-medium text-white">${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.transform = 'translateY(0)'; toast.style.opacity = '1'; }, 10);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Tab Navigation
+        function switchTab(tabId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Generate Non-overlapping Unique Random Key
+        function generateUniqueRandomKey() {
+            let existingKeys = appState.databaseKeys.map(k => k.key);
+            let newKey;
+            do {
+                newKey = 'TH-PRO-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+            } while (existingKeys.includes(newKey));
+            return newKey;
+        }
+
+        // Update UI states
+        function updateUIAfterStateChange() {
+            const linkStatusLabel = document.getElementById('getkey-status-label');
+            const taskContainer = document.getElementById('task-action-container');
+            const resultContainer = document.getElementById('result-key-container');
+            const heroStatus = document.getElementById('hero-key-status');
+            const heroBadge = document.getElementById('hero-key-badge');
+            const devLinkStatus = document.getElementById('dev-link-status');
+
+            if (appState.linkCompleted && appState.assignedKey) {
+                linkStatusLabel.className = 'text-xs font-semibold bg-green-500/20 text-green-400 px-3 py-1 rounded-full border border-green-500/30';
+                linkStatusLabel.innerText = 'Đã hoàn thành link';
+                taskContainer.classList.add('hidden');
+                resultContainer.classList.remove('hidden');
+                document.getElementById('generated-key-input').value = appState.assignedKey;
+
+                heroStatus.innerText = 'Đã có Key';
+                heroStatus.className = 'font-orbitron font-bold text-sm text-green-400';
+                heroBadge.innerText = 'Active';
+                heroBadge.className = 'text-xs text-green-400 bg-green-500/10 px-2.5 py-1 rounded-full';
+
+                devLinkStatus.innerText = 'Đã hoàn thành';
+                devLinkStatus.className = 'font-orbitron font-bold text-sm text-green-400';
+            } else {
+                linkStatusLabel.className = 'text-xs font-semibold bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full';
+                linkStatusLabel.innerText = 'Chưa hoàn thành';
+                taskContainer.classList.remove('hidden');
+                resultContainer.classList.add('hidden');
+
+                heroStatus.innerText = 'Chưa có key';
+                heroStatus.className = 'font-orbitron font-bold text-sm text-yellow-400';
+                heroBadge.innerText = 'Cần Get Key';
+                heroBadge.className = 'text-xs text-yellow-400 bg-yellow-500/10 px-2.5 py-1 rounded-full';
+
+                devLinkStatus.innerText = 'Chưa hoàn thành';
+                devLinkStatus.className = 'font-orbitron font-bold text-sm text-yellow-400';
+            }
+        }
+
+        // External Link Get Key Workflow Simulation
+        function openExternalGetLink() {
+            showToast('Đang chuyển hướng sang trang web Get Key...');
+            switchTab('external-getpage');
+            
+            // Start countdown timer simulation on external page
+            let timeLeft = 5;
+            const timerEl = document.getElementById('countdown-timer');
+            const btnComplete = document.getElementById('btn-complete-external');
+            btnComplete.disabled = true;
+            btnComplete.className = 'w-full py-4 rounded-xl bg-gray-700 text-gray-500 font-orbitron font-bold text-xs tracking-wider cursor-not-allowed transition';
+            btnComplete.innerText = 'VUI LÒNG CHỜ XÁC THỰC...';
+
+            let countdownInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    timerEl.innerText = '✓';
+                    btnComplete.disabled = false;
+                    btnComplete.className = 'w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-orbitron font-bold text-xs tracking-wider shadow-neon cursor-pointer transition';
+                    btnComplete.innerText = 'HOÀN THÀNH & TRỞ VỀ WEB CHÍNH';
+                }
+            }, 1000);
+        }
+
+        function completeExternalTask() {
+            showToast('Đã vượt link thành công! Đang quay lại trang chính...');
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?completed=true';
+            }, 1000);
+        }
+
+        // Clipboard Copy
+        function copyGeneratedKey() {
+            let input = document.getElementById('generated-key-input');
+            input.select();
+            document.execCommand('copy');
+            showToast('Đã sao chép key bản quyền!');
+        }
+
+        function copyHwId() {
+            navigator.clipboard ? navigator.clipboard.writeText(appState.hwid) : alert(appState.hwid);
+            showToast('Đã sao chép mã HWID thiết bị!');
+        }
+
+        // Auth & Admin Functions
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-modal').classList.add('flex');
+        }
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('auth-modal').classList.remove('flex');
+        }
+
+        function handleAuthSubmit() {
+            let user = document.getElementById('auth-username').value.trim();
+            let pass = document.getElementById('auth-password').value.trim();
+
+            if (user === 'admin' && pass === 'admin123') {
+                appState.currentUser = { username: 'admin', role: 'admin' };
+                showToast('Đăng nhập quản trị thành công!');
+                closeAuthModal();
+                document.getElementById('nav-admin-btn').classList.remove('hidden');
+                switchTab('admin');
+                renderAdminTable();
+            } else {
+                showToast('Tài khoản hoặc mật khẩu quản trị không đúng!', 'error');
+            }
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-keys-tbody');
+            tbody.innerHTML = '';
+
+            if (appState.databaseKeys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-500">Chưa có thiết bị nào hoàn thành link get key.</td></tr>`;
+                return;
+            }
+
+            appState.databaseKeys.forEach((item, index) => {
+                let tr = document.createElement('tr');
+                tr.className = 'hover:bg-cyber-800/40 transition';
+                tr.innerHTML = `
+                    <td class="p-4 font-orbitron font-bold text-cyan-400">${item.key}</td>
+                    <td class="p-4 text-xs font-mono text-gray-300">${item.hwid} ${item.hwid === appState.hwid ? '<span class="text-cyan-400">(Thiết bị này)</span>' : ''}</td>
+                    <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-500/10 text-green-400 border border-green-500/30">${item.status}</span></td>
+                    <td class="p-4 text-right">
+                        <button onclick="deleteAdminKey(${index})" class="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 text-xs"><i class="fa-solid fa-trash"></i> Xóa</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deleteAdminKey(index) {
+            let item = appState.databaseKeys[index];
+            if (item.hwid === appState.hwid) {
+                localStorage.removeItem('thub_link_completed_' + appState.hwid);
+                localStorage.removeItem('thub_key_' + appState.hwid);
+                appState.linkCompleted = false;
+                appState.assignedKey = null;
+            }
+            appState.databaseKeys.splice(index, 1);
+            localStorage.setItem('thub_db_keys', JSON.stringify(appState.databaseKeys));
+            renderAdminTable();
+            updateUIAfterStateChange();
+            showToast('Đã xóa key và reset trạng thái thiết bị.');
+        }
+    </script>
+</body>
+</html>
