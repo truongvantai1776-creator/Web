@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T HUB Key & API Management System</title>
-    <!-- Tailwind CSS -->
+    <title>T HUB Key System Dashboard</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,438 +12,363 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#312e81'
-                        }
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b',
+                        accentBlue: '#3b82f6',
+                        accentGreen: '#10b981',
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+<body class="bg-darkBg text-slate-100 min-h-screen flex flex-col">
 
     <!-- Top Navigation Bar -->
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+    <header class="bg-cardBg border-b border-slate-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/30">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-blue-500/30">
                     <i class="fa-solid fa-key text-lg"></i>
                 </div>
-                <div>
-                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">T HUB</span>
-                    <span class="text-xs px-2 py-0.5 ml-1 bg-indigo-500/20 text-indigo-300 rounded-full font-medium border border-indigo-500/30">Key System</span>
-                </div>
+                <span class="font-bold text-lg tracking-wide bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">T HUB System</span>
             </div>
             
+            <!-- User Profile & Role Switcher for Demo -->
             <div class="flex items-center space-x-4">
-                <button onclick="toggleDarkMode()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition">
-                    <i class="fa-solid fa-moon" id="theme-icon"></i>
-                </button>
-                <div class="flex items-center space-x-2 pl-3 border-l border-slate-800">
-                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white shadow">
-                        T
-                    </div>
-                    <span class="text-sm font-medium hidden sm:inline">Tài</span>
+                <div class="flex items-center bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-700">
+                    <span class="text-xs text-slate-400 mr-2">Vai trò:</span>
+                    <select id="roleSelector" onchange="switchRole(this.value)" class="bg-transparent text-xs font-semibold text-blue-400 focus:outline-none cursor-pointer">
+                        <option value="user" class="bg-slate-800 text-slate-200">Người thường (User)</option>
+                        <option value="admin" class="bg-slate-800 text-slate-200">Quản trị viên (Admin)</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-full">
+                    <img id="userAvatar" src="https://placehold.co/32x32/3b82f6/ffffff?text=U" alt="Avatar" class="w-7 h-7 rounded-full">
+                    <span id="userNameDisplay" class="text-sm font-medium">202Huy115</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <!-- Main Content Layout -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
         
         <!-- Sidebar Navigation -->
         <aside class="lg:col-span-1 space-y-2">
-            <nav class="bg-slate-900 border border-slate-800 rounded-2xl p-3 shadow-xl">
-                <a href="#dashboard" onclick="switchTab('dashboard')" class="tab-btn flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" data-target="dashboard">
-                    <i class="fa-solid fa-gauge w-5"></i>
-                    <span>Bảng điều khiển</span>
-                </a>
-                <a href="#api-config" onclick="switchTab('api-config')" class="tab-btn flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60" data-target="api-config">
-                    <i class="fa-solid fa-code w-5"></i>
-                    <span>Developers API</span>
-                </a>
-                <a href="#key-generator" onclick="switchTab('key-generator')" class="tab-btn flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60" data-target="key-generator">
-                    <i class="fa-solid fa-shield-halved w-5"></i>
-                    <span>Quản lý Key & Bot</span>
-                </a>
-                <a href="#php-sample" onclick="switchTab('php-sample')" class="tab-btn flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60" data-target="php-sample">
-                    <i class="fa-brands fa-php w-5"></i>
-                    <span>Tài liệu PHP & Code</span>
-                </a>
-            </nav>
+            <div class="bg-cardBg rounded-2xl p-4 border border-slate-800 shadow-xl">
+                <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 px-3">Menu Điều Hướng</h3>
+                <nav id="sidebarNav" class="space-y-1">
+                    <!-- Dynamically populated based on role -->
+                </nav>
+            </div>
 
-            <!-- Quick Status Box -->
-            <div class="bg-gradient-to-br from-indigo-900/40 to-slate-900 border border-indigo-500/20 rounded-2xl p-4 shadow-xl">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Trạng thái Link4m</span>
-                    <span class="flex h-2 w-2 relative">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                </div>
-                <p class="text-xs text-slate-300">API hoạt động ổn định. Tốc độ phản hồi: ~120ms</p>
+            <div class="bg-gradient-to-br from-blue-900/30 to-indigo-900/30 rounded-2xl p-4 border border-blue-800/40 text-xs text-blue-200">
+                <p class="font-semibold mb-1"><i class="fa-solid fa-shield-halved mr-1"></i> Trạng thái bảo mật</p>
+                <p class="text-slate-400">Hệ thống Link4m API đang hoạt động bình thường với cơ chế phân quyền bảo mật cao.</p>
             </div>
         </aside>
 
-        <!-- Content Area -->
-        <main class="lg:col-span-3 space-y-6">
-
-            <!-- TAB 1: DASHBOARD -->
-            <div id="tab-dashboard" class="tab-content space-y-6">
-                <!-- Welcome Banner -->
-                <div class="bg-gradient-to-r from-indigo-900/60 via-purple-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                    <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-                    <h1 class="text-2xl font-bold text-white mb-2">Xin chào, Tài! 👋</h1>
-                    <p class="text-sm text-slate-300 max-w-2xl">Hệ thống quản lý Link4m API & Key System của bạn đang hoạt động trơn tru. Theo dõi thống kê vượt key và test trực tiếp API rút gọn ngay dưới đây.</p>
-                </div>
-
-                <!-- Metrics Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-medium text-slate-400">Tổng lượt vượt Key</span>
-                            <div class="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl"><i class="fa-solid fa-users"></i></div>
+        <!-- Dynamic Content Area -->
+        <section class="lg:col-span-3 space-y-6">
+            
+            <!-- USER VIEW: Get Key Link4m -->
+            <div id="userView" class="space-y-6">
+                <div class="bg-cardBg rounded-2xl p-6 border border-slate-800 shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/10 rounded-full blur-2xl"></div>
+                    
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="p-3 bg-blue-500/20 text-blue-400 rounded-xl">
+                            <i class="fa-solid fa-link text-xl"></i>
                         </div>
-                        <div class="mt-4 flex items-baseline">
-                            <span class="text-3xl font-bold text-white" id="stat-total-keys">1,482</span>
-                            <span class="ml-2 text-xs font-medium text-emerald-400"><i class="fa-solid fa-arrow-up"></i> +12% hôm nay</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-medium text-slate-400">Link đã rút gọn</span>
-                            <div class="p-2.5 bg-indigo-500/10 text-indigo-400 rounded-xl"><i class="fa-solid fa-link"></i></div>
-                        </div>
-                        <div class="mt-4 flex items-baseline">
-                            <span class="text-3xl font-bold text-white" id="stat-total-links">3,921</span>
-                            <span class="ml-2 text-xs font-medium text-indigo-400">Link4m API</span>
-                        </div>
-                    </div>
-
-                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-medium text-slate-400">Trạng thái API Token</span>
-                            <div class="p-2.5 bg-purple-500/10 text-purple-400 rounded-xl"><i class="fa-solid fa-shield"></i></div>
-                        </div>
-                        <div class="mt-4 flex items-center space-x-2">
-                            <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-lg border border-emerald-500/30">Active</span>
-                            <span class="text-xs text-slate-400">Bảo mật cao</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Shorten Link Tester -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                    <h2 class="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
-                        <i class="fa-solid fa-bolt text-indigo-400"></i>
-                        <span>Thử nghiệm Rút gọn Link (Link4m API)</span>
-                    </h2>
-                    <div class="space-y-4">
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1.5">Nhập link đích cần rút gọn:</label>
-                            <div class="flex gap-2">
-                                <input type="url" id="test-destination" placeholder="https://yourdestinationlink.com" value="https://google.com" class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
-                                <button onclick="simulateShorten()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition shadow-lg shadow-indigo-600/30 flex items-center space-x-2">
-                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                    <span>Tạo Link</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div id="test-result-box" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-semibold text-emerald-400"><i class="fa-solid fa-check-circle"></i> Thành công!</span>
-                                <button onclick="copyShortenedLink()" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium">Sao chép</button>
-                            </div>
-                            <input type="text" id="test-result-url" readonly class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 2: DEVELOPERS API -->
-            <div id="tab-api-config" class="tab-content space-y-6 hidden">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
-                    <div class="border-b border-slate-800 pb-4">
-                        <h2 class="text-xl font-bold text-white mb-1">Developers API</h2>
-                        <p class="text-sm text-slate-400">Bảng điều khiển & quản lý Token cá nhân của bạn trên Link4m</p>
-                    </div>
-
-                    <!-- API Token Display Box -->
-                    <div class="bg-emerald-950/30 border border-emerald-500/40 rounded-2xl p-5 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <label class="text-sm font-bold text-emerald-400 flex items-center space-x-2">
-                                <i class="fa-solid fa-key"></i>
-                                <span>Your API token:</span>
-                            </label>
-                            <button onclick="copyApiToken()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-medium transition flex items-center space-x-1.5">
-                                <i class="fa-regular fa-copy"></i>
-                                <span>Copy Token</span>
-                            </button>
-                        </div>
-                        <div class="relative">
-                            <input type="text" id="api-token-input" readonly value="6aa64917139ec42c1a275465" class="w-full bg-slate-950 border border-emerald-500/30 rounded-xl px-4 py-3 text-sm font-mono text-emerald-300 focus:outline-none">
+                            <h2 class="text-xl font-bold">Vượt Key Nhận Thưởng (Link4m)</h2>
+                            <p class="text-sm text-slate-400">Hoàn thành vượt link qua hệ thống Link4m để nhận Key truy cập Script T HUB.</p>
                         </div>
                     </div>
 
-                    <!-- API Docs Explanation -->
-                    <div class="space-y-4 text-sm text-slate-300">
-                        <p>For developers Link4m prepared <strong>API</strong> which returns responses in <strong>JSON</strong></p>
-                        <p>Currently there is one method which can be used to shorten links on behalf of your account.</p>
-                        <p class="font-medium text-slate-200">All you have to do is to send a <strong>GET</strong> request with your API token and URL Like the following:</p>
-
-                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-indigo-300 overflow-x-auto">
-                            https://link4m.co/api-shorten/v2?api=6aa64917139ec42c1a275465&url=yourdestinationlink.com
-                        </div>
-
-                        <p class="font-medium text-slate-200">You will get a JSON response like the following</p>
-
-                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-emerald-300 overflow-x-auto">
-                            {"status":"success","shortenedUrl":"https:\/\/link4m.co\/xxxxxx"}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 3: KEY GENERATOR & DISCORD NOTIFICATION -->
-            <div id="tab-key-generator" class="tab-content space-y-6 hidden">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
-                    <div class="border-b border-slate-800 pb-4">
-                        <h2 class="text-xl font-bold text-white mb-1">Quản lý Key & Bot Discord</h2>
-                        <p class="text-sm text-slate-400">Xem thông báo vượt key thời gian thực từ Bot T HUB</p>
-                    </div>
-
-                    <!-- Discord Notification Preview Card -->
-                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 relative overflow-hidden space-y-4">
-                        <div class="absolute top-0 right-0 px-3 py-1 bg-indigo-500/10 text-indigo-400 text-xs font-semibold rounded-bl-xl border-l border-b border-indigo-500/20">
-                            Discord Webhook Live Feed
-                        </div>
-                        
-                        <div class="flex items-start space-x-3 pt-2">
-                            <div class="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
-                                <i class="fa-brands fa-discord text-xl"></i>
-                            </div>
-                            <div class="space-y-1">
+                    <div class="bg-slate-900/70 rounded-xl p-5 border border-slate-800 space-y-4">
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div class="w-full">
+                                <label class="block text-xs font-medium text-slate-400 mb-1">Link Get Key của bạn:</label>
                                 <div class="flex items-center space-x-2">
-                                    <span class="font-bold text-sm text-white">Bot T HUB</span>
-                                    <span class="text-xs bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded font-mono">#nhật-ký-key</span>
-                                    <span class="text-xs text-slate-500">· 
-                                        <script>
-                                            const d = new Date();
-                                            document.write(d.getHours() + ':' + (d.getMinutes()<10?'0':'') + d.getMinutes());
-                                        </script>
-                                    </span>
-                                </div>
-                                <div class="text-sm text-slate-200 bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1 shadow-inner">
-                                    <p class="font-bold text-amber-400">👑 **Có người vượt Key thành công!**</p>
-                                    <p class="text-slate-300 font-mono text-xs">- **Username:** <span class="text-indigo-300 bg-indigo-950/60 px-1.5 py-0.5 rounded">202Huy115</span></p>
-                                    <p class="text-slate-300 font-mono text-xs">- **IP Address:** <span class="text-emerald-300 bg-emerald-950/60 px-1.5 py-0.5 rounded">113.161.xx.xx</span></p>
-                                    <p class="text-slate-300 font-mono text-xs">- **Time:** <span class="text-slate-400">Hôm nay, 21:25</span></p>
+                                    <input type="text" readonly id="link4mInput" value="https://link4m.co/api-shorten/v2?api=6aa64917139ec42c1a275465&url=https://thub.key/get-key?user=202Huy115" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-300 focus:outline-none">
+                                    <button onclick="copyLink4m()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-lg shadow-blue-600/30 whitespace-nowrap">
+                                        <i class="fa-solid fa-copy mr-1"></i> Sao chép
+                                    </button>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <a href="#" onclick="openLink4mRedirect(event)" target="_blank" class="w-full sm:w-auto text-center bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-medium px-6 py-3 rounded-xl shadow-lg shadow-emerald-600/25 transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-external-link-alt"></i>
+                                <span>Đi đến trang Vượt Link (Link4m)</span>
+                            </a>
+                            <div class="text-xs text-slate-400 text-center sm:text-right">
+                                Trạng thái Key hiện tại: <span id="keyStatusBadge" class="text-amber-400 font-semibold">Chưa vượt link</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tutorial Card -->
+                <div class="bg-cardBg rounded-2xl p-6 border border-slate-800 shadow-xl">
+                    <h3 class="font-semibold text-base mb-3 flex items-center text-slate-200">
+                        <i class="fa-solid fa-circle-question text-blue-400 mr-2"></i> Hướng dẫn vượt Link4m lấy Key
+                    </h3>
+                    <ul class="space-y-2 text-sm text-slate-400 list-disc list-inside">
+                        <li>Bấm vào nút <strong class="text-slate-200">Đi đến trang Vượt Link (Link4m)</strong> ở phía trên.</li>
+                        <li>Thực hiện các bước theo yêu cầu trên trang Link4m để lấy mã xác nhận.</li>
+                        <li>Hệ thống Bot T HUB sẽ tự động gửi thông báo chúc mừng qua Discord khi bạn hoàn thành thành công!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ADMIN VIEW: Key Generator -->
+            <div id="adminKeyView" class="hidden space-y-6">
+                <div class="bg-cardBg rounded-2xl p-6 border border-slate-800 shadow-xl">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="p-3 bg-purple-500/20 text-purple-400 rounded-xl">
+                            <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold">Quản Lý Tạo Key (Dành riêng cho Admin)</h2>
+                            <p class="text-sm text-slate-400">Tạo mã key bản quyền tùy chỉnh cho thành viên.</p>
+                        </div>
                     </div>
 
-                    <!-- Live Key Generator simulator -->
-                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
-                        <h3 class="text-sm font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-key text-indigo-400"></i>
-                            <span>Tạo Link Vượt Key Mới cho Script/Tool</span>
-                        </h3>
+                    <div class="bg-slate-900/70 rounded-xl p-5 border border-slate-800 space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-medium text-slate-400 mb-1">Tên Script / Dự án:</label>
-                                <input type="text" id="script-name" value="Blox Fruit Hub V3" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+								<label class="block text-xs font-medium text-slate-400 mb-1">Tên tài khoản nhận Key:</label>
+                                <input type="text" id="targetUsername" placeholder="Nhập username..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-slate-400 mb-1">Thời hạn Key:</label>
-                                <select id="key-duration" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                <select id="keyDuration" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
                                     <option value="24">24 Giờ (1 Ngày)</option>
-                                    <option value="48">48 Giờ (2 Ngày)</option>
-                                    <option value="168">7 Ngày (1 Tuần)</option>
+                                    <option value="168">7 Ngày</option>
+                                    <option value="720">30 Ngày</option>
+                                    <option value="99999">Vĩnh viễn</option>
                                 </select>
                             </div>
                         </div>
-                        <button onclick="generateKeySystemLink()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium py-2.5 rounded-xl text-sm transition shadow-lg shadow-indigo-600/20">
-                            Tạo Link Vượt Key (Qua Link4m API)
+                        <button onclick="generateAdminKey()" class="bg-purple-600 hover:bg-purple-500 text-white font-medium px-6 py-2.5 rounded-xl transition shadow-lg shadow-purple-600/30 text-sm">
+                            <i class="fa-solid fa-plus mr-1"></i> Tạo Key Ngay
                         </button>
-                        <div id="generated-key-box" class="hidden p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono text-indigo-300 break-all">
-                            <!-- Generated Link will appear here -->
+                        
+                        <div id="generatedKeyBox" class="hidden mt-4 p-3 bg-slate-800 border border-purple-500/30 rounded-lg flex items-center justify-between">
+                            <span id="newKeyText" class="font-mono text-sm text-purple-300">THUB-KEY-XXXX-YYYY</span>
+                            <button onclick="copyGeneratedKey()" class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded text-slate-200">Sao chép</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 4: PHP SAMPLE & DOCUMENTATION -->
-            <div id="tab-php-sample" class="tab-content space-y-6 hidden">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
-                    <div class="border-b border-slate-800 pb-4">
-                        <h2 class="text-xl font-bold text-white mb-1">Using the API in PHP</h2>
-                        <p class="text-sm text-slate-400">Sample implementation using file_get_contents or cURL</p>
+            <!-- ADMIN VIEW: Account Logs (Log Acc) -->
+            <div id="adminLogView" class="hidden space-y-6">
+                <div class="bg-cardBg rounded-2xl p-6 border border-slate-800 shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-3 bg-red-500/20 text-red-400 rounded-xl">
+                                <i class="fa-solid fa-clipboard-user text-xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold">Nhật Ký Tài Khoản & Log Acc (Admin Only)</h2>
+                                <p class="text-sm text-slate-400">Theo dõi hoạt động đăng nhập và vượt key của người dùng trong hệ thống.</p>
+                            </div>
+                        </div>
+                        <button onclick="clearLogs()" class="bg-slate-800 hover:bg-red-900/40 text-slate-400 hover:text-red-300 text-xs px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                            <i class="fa-solid fa-trash-can mr-1"></i> Xóa Logs
+                        </button>
                     </div>
 
-                    <p class="text-sm text-slate-300">
-                        To use the API in your PHP application, you need to send a GET request via <code>file_get_contents</code> or <code>cURL</code>. Please check the below sample examples using <code>file_get_contents</code>
-                    </p>
-
-                    <!-- PHP Code Block -->
-                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 relative overflow-hidden group">
-                        <div class="absolute top-3 right-3">
-                            <button onclick="copyPhpCode()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg transition font-mono flex items-center space-x-1.5">
-                                <i class="fa-regular fa-copy"></i>
-                                <span>Copy Code</span>
-                            </button>
-                        </div>
-                        <pre class="font-mono text-xs text-indigo-300 overflow-x-auto leading-relaxed pt-2" id="php-code-snippet"><code>$long_url = urlencode('yourdestinationlink.com');
-$api_token = '6aa64917139ec42c1a275465';
-$api_url = "https://link4m.co/api-shorten/v2?api={$api_token}&url={$long_url}";
-$result = @json_decode(file_get_contents($api_url), TRUE);
-if($result["status"] !== 'success') {
-    echo $result["message"];
-} else {
-    echo $result["shortenedUrl"];
-}</code></pre>
+                    <div class="overflow-x-auto rounded-xl border border-slate-800">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-900 text-xs uppercase text-slate-400 border-b border-slate-800">
+                                <tr>
+                                    <th class="px-4 py-3">Thời gian</th>
+                                    <th class="px-4 py-3">Username</th>
+                                    <th class="px-4 py-3">Hành động</th>
+                                    <th class="px-4 py-3">IP / Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logTableBody" class="divide-y divide-slate-800">
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="px-4 py-3 text-xs text-slate-400">2026-06-06 21:30:15</td>
+                                    <td class="px-4 py-3 font-medium text-blue-400">202Huy115</td>
+                                    <td class="px-4 py-3"><span class="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded">Vượt Key Link4m thành công</span></td>
+                                    <td class="px-4 py-3 text-xs text-slate-400">113.160.xx.xx</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="px-4 py-3 text-xs text-slate-400">2026-06-06 20:10:02</td>
+                                    <td class="px-4 py-3 font-medium text-slate-300">PlayerX99</td>
+                                    <td class="px-4 py-3"><span class="bg-blue-500/20 text-blue-400 text-xs px-2 py-0.5 rounded">Đăng nhập hệ thống</span></td>
+                                    <td class="px-4 py-3 text-xs text-slate-400">27.72.xx.xx</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-        </main>
+        </section>
+    </main>
+
+    <!-- Custom Toast Notification -->
+    <div id="toast" class="fixed bottom-5 right-5 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 border border-slate-700 px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 z-50">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMsg" class="text-sm font-medium text-slate-200">Thành công!</span>
     </div>
 
-    <!-- JavaScript Application Logic -->
     <script>
-        // Tab Switching Logic
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
+        let currentRole = 'user'; // 'user' or 'admin'
 
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/20');
-                btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800/60');
-            });
+        // Initialize dashboard state on load
+        window.onload = function() {
+            renderSidebar();
+            updateViewVisibility();
+        };
 
-            const activeBtn = document.querySelector(`[data-target="${tabId}"]`);
-            if (activeBtn) {
-                activeBtn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800/60');
-                activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/20');
-            }
-        }
+        function switchRole(role) {
+            currentRole = role;
+            const avatar = document.getElementById('userAvatar');
+            const nameDisplay = document.getElementById('userNameDisplay');
 
-        // Theme Toggle
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            const icon = document.getElementById('theme-icon');
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                icon.className = 'fa-solid fa-sun';
+            if (role === 'admin') {
+                nameDisplay.textContent = 'Admin T HUB';
+                avatar.src = 'https://placehold.co/32x32/7c3aed/ffffff?text=A';
+                showToast('Đã chuyển sang chế độ Quản trị viên (Admin)', 'success');
             } else {
-                html.classList.add('dark');
-                icon.className = 'fa-solid fa-moon';
+                nameDisplay.textContent = '202Huy115';
+                avatar.src = 'https://placehold.co/32x32/3b82f6/ffffff?text=U';
+                showToast('Đã chuyển về giao diện Người thường', 'info');
+            }
+
+            renderSidebar();
+            updateViewVisibility();
+        }
+
+        function renderSidebar() {
+            const nav = document.getElementById('sidebarNav');
+            let html = '';
+
+            if (currentRole === 'user') {
+                html += `
+                    <a href="#" onclick="switchTab('userView')" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-blue-600 text-white font-medium text-sm transition shadow-lg shadow-blue-600/20">
+                        <i class="fa-solid fa-link w-5"></i>
+                        <span>Get Key Link4m</span>
+                    </a>
+                `;
+            } else {
+                html += `
+                    <a href="#" onclick="switchTab('adminKeyView')" id="tabAdminKey" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-purple-600 text-white font-medium text-sm transition shadow-lg shadow-purple-600/20">
+                        <i class="fa-solid fa-wand-magic-sparkles w-5"></i>
+                        <span>Tạo Key (Admin)</span>
+                    </a>
+                    <a href="#" onclick="switchTab('adminLogView')" id="tabAdminLog" class="flex items-center space-x-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white font-medium text-sm transition">
+                        <i class="fa-solid fa-clipboard-user w-5"></i>
+                        <span>Log Acc (Admin)</span>
+                    </a>
+                `;
+            }
+            nav.innerHTML = html;
+        }
+
+        function switchTab(tabId) {
+            document.getElementById('adminKeyView').classList.add('hidden');
+            document.getElementById('adminLogView').classList.add('hidden');
+
+            if (tabId === 'adminKeyView') {
+                document.getElementById('adminKeyView').classList.remove('hidden');
+            } else if (tabId === 'adminLogView') {
+                document.getElementById('adminLogView').classList.remove('hidden');
             }
         }
 
-        // Copy API Token
-        function copyApiToken() {
-            const tokenInput = document.getElementById('api-token-input');
-            document.execCommand('copy');
-            // Fallback copy using older method/clipboard
-            const range = document.createRange();
-            range.selectNode(tokenInput);
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
-            document.execCommand('copy');
-            
-            showToast('Đã sao chép API Token vào clipboard!');
-        }
+        function updateViewVisibility() {
+            const userView = document.getElementById('userView');
+            const adminKeyView = document.getElementById('adminKeyView');
+            const adminLogView = document.getElementById('adminLogView');
 
-        // Copy PHP Code
-        function copyPhpCode() {
-            const codeText = document.getElementById('php-code-snippet').innerText;
-            const textarea = document.createElement('textarea');
-            textarea.value = codeText;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            
-            showToast('Đã sao chép đoạn mã PHP mẫu!');
-        }
-
-        // Simulate Link Shortening
-        function simulateShorten() {
-            const dest = document.getElementById('test-destination').value;
-            if(!dest) {
-                showToast('Vui lòng nhập link đích hợp lệ!');
-                return;
+            if (currentRole === 'user') {
+                userView.classList.remove('hidden');
+                adminKeyView.classList.add('hidden');
+                adminLogView.classList.add('hidden');
+            } else {
+                userView.classList.add('hidden');
+                adminKeyView.classList.remove('hidden');
+                adminLogView.classList.add('hidden'); // Default tab for admin
             }
-
-            const resultBox = document.getElementById('test-result-box');
-            const resultUrl = document.getElementById('test-result-url');
-
-            // Generate mock shortened link based on Link4m format
-            const randomHash = Math.random().toString(36).substring(2, 8);
-            resultUrl.value = `https://link4m.co/${randomHash}`;
-            resultBox.classList.remove('hidden');
-
-            // Update stats
-            const totalLinksElem = document.getElementById('stat-total-links');
-            totalLinksElem.innerText = parseInt(totalLinksElem.innerText.replace(',', '')) + 1;
-
-            showToast('Rút gọn link thành công qua Link4m API!');
         }
 
-        function copyShortenedLink() {
-            const resultUrl = document.getElementById('test-result-url');
-            resultUrl.select();
+        function copyLink4m() {
+            const copyText = document.getElementById("link4mInput");
+            copyText.select();
             document.execCommand('copy');
-            showToast('Đã sao chép link rút gọn!');
+            showToast('Đã sao chép liên kết Get Key Link4m!', 'success');
         }
 
-        // Generate Key System Link
-        function generateKeySystemLink() {
-            const scriptName = document.getElementById('script-name').value;
-            const duration = document.getElementById('key-duration').value;
-            const genBox = document.getElementById('generated-key-box');
-
-            const mockKeyId = Math.random().toString(36).substring(2, 10).toUpperCase();
-            genBox.innerHTML = `Link Vượt Key (${scriptName} - Hạn ${duration}h):<br><span class="text-emerald-400 font-bold">https://thub-key.site/get-key?token=6aa64917&key=${mockKeyId}</span>`;
-            genBox.classList.remove('hidden');
-
-            showToast('Tạo link vượt key hệ thống thành công!');
-        }
-
-        // Toast Notification System
-        function showToast(message) {
-            const existingToast = document.getElementById('custom-toast');
-            if(existingToast) existingToast.remove();
-
-            const toast = document.createElement('div');
-            toast.id = 'custom-toast';
-            toast.className = 'fixed bottom-6 right-6 bg-slate-900 border border-indigo-500/40 text-white px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center space-x-3 animate-bounce';
-            toast.innerHTML = `
-                <div class="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-xs text-white">
-                    <i class="fa-solid fa-check"></i>
-                </div>
-                <span class="text-sm font-medium">${message}</span>
-            `;
-            document.body.appendChild(toast);
+        function openLink4mRedirect(e) {
+            e.preventDefault();
+            showToast('Đang chuyển hướng đến Link4m...', 'info');
             setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.5s ease';
-                setTimeout(() => toast.remove(), 500);
+                window.open('https://link4m.co', '_blank');
+                document.getElementById('keyStatusBadge').textContent = 'Đã vượt link thành công!';
+                document.getElementById('keyStatusBadge').className = 'text-emerald-400 font-semibold';
+            }, 1000);
+        }
+
+        function generateAdminKey() {
+            const username = document.getElementById('targetUsername').value || 'Guest';
+            const randomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+            const newKey = `THUB-${username.toUpperCase()}-${randomCode}`;
+            
+            document.getElementById('newKeyText').textContent = newKey;
+            document.getElementById('generatedKeyBox').classList.remove('hidden');
+            showToast('Đã tạo key hệ thống thành công cho ' + username, 'success');
+        }
+
+        function copyGeneratedKey() {
+            const text = document.getElementById('newKeyText').textContent;
+            const dummy = document.createElement('textarea');
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            showToast('Đã sao chép Key!', 'success');
+        }
+
+        function clearLogs() {
+            document.getElementById('logTableBody').innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-slate-500 italic">Không có nhật ký nào được ghi nhận.</td></tr>`;
+            showToast('Đã dọn dẹp nhật ký tài khoản', 'info');
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.textContent = message;
+            if (type === 'success') {
+                toastIcon.className = 'fa-solid fa-circle-check text-emerald-400';
+            } else {
+                toastIcon.className = 'fa-solid fa-circle-info text-blue-400';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
             }, 3000);
         }
     </script>
