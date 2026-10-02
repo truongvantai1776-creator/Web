@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T HUB - Secure Key Verification System</title>
-    <!-- Tailwind CSS CDN -->
+    <title>T HUB Key & API Management System</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,21 +12,13 @@
             theme: {
                 extend: {
                     colors: {
-                        cyber: {
-                            900: '#050b14',
-                            800: '#0b162c',
-                            700: '#132347',
-                            600: '#1d3566',
-                            500: '#2563eb',
-                            400: '#3b82f6',
-                            300: '#60a5fa',
-                            neon: '#00f0ff',
-                            accent: '#7000ff'
+                        brand: {
+                            50: '#eef2ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81'
                         }
-                    },
-                    boxShadow: {
-                        'neon': '0 0 20px rgba(0, 240, 255, 0.4)',
-                        'neon-lg': '0 0 35px rgba(0, 240, 255, 0.7)',
                     }
                 }
             }
@@ -35,551 +27,424 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #030712;
-            color: #f3f4f6;
-            overflow-x: hidden;
-        }
-        .font-orbitron {
-            font-family: 'Orbitron', sans-serif;
-        }
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #050b14;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1d3566;
-            border-radius: 4px;
-        }
-        .cyber-border {
-            position: relative;
-            background: linear-gradient(135deg, rgba(19, 35, 71, 0.7), rgba(5, 11, 20, 0.9));
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            backdrop-filter: blur(12px);
-        }
-        .cyber-border::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 10px; height: 10px;
-            border-top: 2px solid #00f0ff;
-            border-left: 2px solid #00f0ff;
-        }
-        .cyber-border::after {
-            content: '';
-            position: absolute;
-            bottom: 0; right: 0; width: 10px; height: 10px;
-            border-bottom: 2px solid #00f0ff;
-            border-right: 2px solid #00f0ff;
-        }
-        .glow-text {
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.4);
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-cyber-900 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyber-700 via-cyber-900 to-black">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
 
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-3"></div>
-
-    <nav class="border-b border-cyber-600/50 bg-cyber-900/80 backdrop-blur-md sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center shadow-neon">
-                    <i class="fa-solid fa-cube text-black font-black text-lg"></i>
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-key text-lg"></i>
                 </div>
                 <div>
-                    <span class="font-orbitron font-black text-2xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">T HUB</span>
-                    <span class="block text-[10px] tracking-widest text-cyan-400 uppercase font-semibold">Secure Key Portal</span>
+                    <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">T HUB</span>
+                    <span class="text-xs px-2 py-0.5 ml-1 bg-indigo-500/20 text-indigo-300 rounded-full font-medium border border-indigo-500/30">Key System</span>
                 </div>
             </div>
             
-            <div class="hidden md:flex items-center space-x-6">
-                <button onclick="switchTab('home')" class="text-cyan-400 hover:text-white transition font-medium text-sm flex items-center gap-2"><i class="fa-solid fa-house"></i> Trang Chủ</button>
-                <button onclick="switchTab('getkey')" class="text-gray-400 hover:text-cyan-400 transition font-medium text-sm flex items-center gap-2"><i class="fa-solid fa-key"></i> Get Key</button>
-                <button onclick="switchTab('device')" class="text-gray-400 hover:text-cyan-400 transition font-medium text-sm flex items-center gap-2"><i class="fa-solid fa-laptop-code"></i> Quản Lý Thiết Bị</button>
-                <button id="nav-admin-btn" onclick="switchTab('admin')" class="hidden text-gray-400 hover:text-cyan-400 transition font-medium text-sm flex items-center gap-2"><i class="fa-solid fa-shield-halved"></i> Quản Trị Admin</button>
-            </div>
-
             <div class="flex items-center space-x-4">
-                <div id="auth-nav-container">
-                    <button onclick="openAuthModal()" class="px-5 py-2.5 rounded-xl border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 font-orbitron text-xs font-semibold tracking-wider transition shadow-neon">
-                        ĐĂNG NHẬP
-                    </button>
+                <button onclick="toggleDarkMode()" class="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                </button>
+                <div class="flex items-center space-x-2 pl-3 border-l border-slate-800">
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center font-bold text-white shadow">
+                        T
+                    </div>
+                    <span class="text-sm font-medium hidden sm:inline">Tài</span>
                 </div>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="lg:col-span-1 space-y-2">
+            <nav class="bg-slate-900 border border-slate-800 rounded-2xl p-3 shadow-xl">
+                <a href="#dashboard" onclick="switchTab('dashboard')" class="tab-btn flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition bg-indigo-600 text-white shadow-lg shadow-indigo-600/20" data-target="dashboard">
+                    <i class="fa-solid fa-gauge w-5"></i>
+                    <span>Bảng điều khiển</span>
+                </a>
+                <a href="#api-config" onclick="switchTab('api-config')" class="tab-btn flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60" data-target="api-config">
+                    <i class="fa-solid fa-code w-5"></i>
+                    <span>Developers API</span>
+                </a>
+                <a href="#key-generator" onclick="switchTab('key-generator')" class="tab-btn flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60" data-target="key-generator">
+                    <i class="fa-solid fa-shield-halved w-5"></i>
+                    <span>Quản lý Key & Bot</span>
+                </a>
+                <a href="#php-sample" onclick="switchTab('php-sample')" class="tab-btn flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800/60" data-target="php-sample">
+                    <i class="fa-brands fa-php w-5"></i>
+                    <span>Tài liệu PHP & Code</span>
+                </a>
+            </nav>
 
-        <!-- VIEW: HOME -->
-        <section id="view-home" class="view-section transition-all duration-300">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center py-12">
-                <div class="space-y-6">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-cyan-400 text-xs font-semibold tracking-wide">
-                        <i class="fa-solid fa-bolt text-cyan-400"></i> UNIQUE DEVICE KEY SYSTEM
-                    </div>
-                    <h1 class="font-orbitron font-black text-4xl sm:text-6xl tracking-tight leading-none text-white">
-                        MORE THAN JUST A HUB <br>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 glow-text">IT'S YOUR SPACE</span>
-                    </h1>
-                    <p class="text-gray-400 text-base leading-relaxed">
-                        Hệ thống cấp key ngẫu nhiên độc lập tuyệt đối cho từng thiết bị (HWID Binding). Không trùng lặp, chống gian lận với quy trình vượt link thông minh.
-                    </p>
-                    <div class="flex flex-wrap gap-4 pt-4">
-                        <button onclick="switchTab('getkey')" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-orbitron font-bold text-sm tracking-wider hover:shadow-neon-lg transition transform hover:-translate-y-0.5 flex items-center gap-3">
-                            <i class="fa-solid fa-key"></i> BẮT ĐẦU GET KEY
-                        </button>
-                        <button onclick="switchTab('device')" class="px-8 py-4 rounded-xl cyber-border text-cyan-400 hover:bg-cyber-700/50 font-orbitron font-bold text-sm tracking-wider transition flex items-center gap-3">
-                            <i class="fa-solid fa-fingerprint"></i> KIỂM TRA THIẾT BỊ
-                        </button>
-                    </div>
-                </div>
-
-                <div class="relative flex justify-center">
-                    <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-500 to-purple-600 opacity-30 blur-2xl"></div>
-                    <div class="relative cyber-border p-8 rounded-3xl w-full max-w-md shadow-2xl space-y-6">
-                        <div class="flex items-center justify-between border-b border-cyber-600/50 pb-4">
-                            <div class="flex items-center space-x-2">
-                                <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
-                                <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
-                                <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
-                            </div>
-                            <span class="font-orbitron text-xs text-cyan-400 font-bold tracking-widest">HWID PROTECTED</span>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="p-4 rounded-xl bg-cyber-800/80 border border-cyan-500/20 flex items-center justify-between">
-                                <div>
-                                    <div class="text-xs text-gray-400">Mã Thiết Bị Của Bạn</div>
-                                    <div id="hero-hwid-display" class="font-orbitron font-bold text-sm text-cyan-300">Đang quét...</div>
-                                </div>
-                                <button onclick="copyHwId()" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 text-xs font-semibold"><i class="fa-solid fa-copy"></i></button>
-                            </div>
-                            <div class="p-4 rounded-xl bg-cyber-800/80 border border-blue-500/20 flex items-center justify-between">
-                                <div>
-                                    <div class="text-xs text-gray-400">Trạng Thái Key Của Máy</div>
-                                    <div id="hero-key-status" class="font-orbitron font-bold text-sm text-yellow-400">Chưa có key</div>
-                                </div>
-                                <span id="hero-key-badge" class="text-xs text-yellow-400 bg-yellow-500/10 px-2.5 py-1 rounded-full">Cần Get Key</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- VIEW: GET KEY (SINGLE LINK TASK & VERIFICATION) -->
-        <section id="view-getkey" class="view-section hidden py-8">
-            <div class="max-w-3xl mx-auto space-y-8">
-                <div class="text-center space-y-3">
-                    <h2 class="font-orbitron font-black text-3xl sm:text-4xl text-white">HỆ THỐNG GET KEY THIẾT BỊ</h2>
-                    <p class="text-gray-400 text-sm">Hoàn thành 1 bước vượt link rút gọn duy nhất để hệ thống cấp key ngẫu nhiên độc quyền gắn chết với thiết bị của bạn.</p>
-                </div>
-
-                <!-- HWID Banner -->
-                <div class="cyber-border p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl">
-                            <i class="fa-solid fa-microchip"></i>
-                        </div>
-                        <div>
-                            <div class="text-xs text-gray-400 font-semibold">MÃ HWID THIẾT BỊ NÀY</div>
-                            <div id="current-user-hwid" class="font-orbitron font-bold text-cyan-300 text-sm sm:text-base">TH-DEV-99A8F1</div>
-                        </div>
-                    </div>
-                    <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold flex items-center gap-1.5">
-                        <i class="fa-solid fa-shield"></i> Khóa Riêng Biệt
+            <!-- Quick Status Box -->
+            <div class="bg-gradient-to-br from-indigo-900/40 to-slate-900 border border-indigo-500/20 rounded-2xl p-4 shadow-xl">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-semibold text-indigo-400 uppercase tracking-wider">Trạng thái Link4m</span>
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
                 </div>
+                <p class="text-xs text-slate-300">API hoạt động ổn định. Tốc độ phản hồi: ~120ms</p>
+            </div>
+        </aside>
 
-                <!-- Single Link Task Container -->
-                <div class="cyber-border p-6 sm:p-8 rounded-3xl space-y-6">
-                    <div class="flex items-center justify-between border-b border-cyber-600/50 pb-4">
-                        <h3 class="font-orbitron font-bold text-lg text-white flex items-center gap-2">
-                            <i class="fa-solid fa-link text-cyan-400"></i> Nhiệm Vụ Vượt Link Get Key
-                        </h3>
-                        <span id="getkey-status-label" class="text-xs font-semibold bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full">Chưa hoàn thành</span>
-                    </div>
+        <!-- Content Area -->
+        <main class="lg:col-span-3 space-y-6">
 
-                    <!-- Task Instructions / Action Box -->
-                    <div id="task-action-container" class="p-6 rounded-2xl bg-cyber-800/80 border border-cyber-600/50 space-y-4 text-center">
-                        <div class="w-16 h-16 mx-auto rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-2xl">
-                            <i class="fa-solid fa-globe"></i>
-                        </div>
-                        <div class="space-y-1">
-                            <h4 class="font-orbitron font-bold text-white text-base">Bước 1: Truy cập Trạm Lấy Key Khác</h4>
-                            <p class="text-xs text-gray-400 max-w-md mx-auto">Nhấn nút bên dưới để mở trang web get key độc lập. Sau khi hoàn thành vượt link tại trang đó, hệ thống sẽ tự động xác nhận và đưa bạn trở lại đây nhận key.</p>
-                        </div>
-                        <button onclick="openExternalGetLink()" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-orbitron font-bold text-sm tracking-wider shadow-neon hover:shadow-neon-lg transition inline-flex items-center gap-3">
-                            <i class="fa-solid fa-external-link-alt"></i> ĐẾN TRANG GET KEY NGAY
-                        </button>
-                    </div>
+            <!-- TAB 1: DASHBOARD -->
+            <div id="tab-dashboard" class="tab-content space-y-6">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-indigo-900/60 via-purple-900/40 to-slate-900 border border-indigo-500/30 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <h1 class="text-2xl font-bold text-white mb-2">Xin chào, Tài! 👋</h1>
+                    <p class="text-sm text-slate-300 max-w-2xl">Hệ thống quản lý Link4m API & Key System của bạn đang hoạt động trơn tru. Theo dõi thống kê vượt key và test trực tiếp API rút gọn ngay dưới đây.</p>
+                </div>
 
-                    <!-- Result Key Display (Hiển thị sau khi hoàn thành link) -->
-                    <div id="result-key-container" class="hidden p-6 rounded-2xl bg-gradient-to-r from-blue-900/40 to-cyan-900/40 border border-cyan-500/50 space-y-4">
+                <!-- Metrics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
                         <div class="flex items-center justify-between">
-                            <span class="text-xs text-cyan-400 font-semibold uppercase tracking-wider"><i class="fa-solid fa-circle-check"></i> Key Riêng Biệt Cho Thiết Bị Này:</span>
-                            <span class="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded border border-green-500/30">Đã Xác Thực Hoàn Tất</span>
+                            <span class="text-sm font-medium text-slate-400">Tổng lượt vượt Key</span>
+                            <div class="p-2.5 bg-emerald-500/10 text-emerald-400 rounded-xl"><i class="fa-solid fa-users"></i></div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <input type="text" id="generated-key-input" readonly class="w-full bg-cyber-900 border border-cyan-500/40 rounded-xl px-4 py-3 font-orbitron text-white text-sm focus:outline-none" value="">
-                            <button onclick="copyGeneratedKey()" class="px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-semibold text-xs transition shadow-neon">
-                                <i class="fa-solid fa-copy"></i> Sao chép
+                        <div class="mt-4 flex items-baseline">
+                            <span class="text-3xl font-bold text-white" id="stat-total-keys">1,482</span>
+                            <span class="ml-2 text-xs font-medium text-emerald-400"><i class="fa-solid fa-arrow-up"></i> +12% hôm nay</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-slate-400">Link đã rút gọn</span>
+                            <div class="p-2.5 bg-indigo-500/10 text-indigo-400 rounded-xl"><i class="fa-solid fa-link"></i></div>
+                        </div>
+                        <div class="mt-4 flex items-baseline">
+                            <span class="text-3xl font-bold text-white" id="stat-total-links">3,921</span>
+                            <span class="ml-2 text-xs font-medium text-indigo-400">Link4m API</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-slate-400">Trạng thái API Token</span>
+                            <div class="p-2.5 bg-purple-500/10 text-purple-400 rounded-xl"><i class="fa-solid fa-shield"></i></div>
+                        </div>
+                        <div class="mt-4 flex items-center space-x-2">
+                            <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-lg border border-emerald-500/30">Active</span>
+                            <span class="text-xs text-slate-400">Bảo mật cao</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Shorten Link Tester -->
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                    <h2 class="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+                        <i class="fa-solid fa-bolt text-indigo-400"></i>
+                        <span>Thử nghiệm Rút gọn Link (Link4m API)</span>
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-400 mb-1.5">Nhập link đích cần rút gọn:</label>
+                            <div class="flex gap-2">
+                                <input type="url" id="test-destination" placeholder="https://yourdestinationlink.com" value="https://google.com" class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500 transition">
+                                <button onclick="simulateShorten()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-medium transition shadow-lg shadow-indigo-600/30 flex items-center space-x-2">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    <span>Tạo Link</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="test-result-box" class="hidden p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-semibold text-emerald-400"><i class="fa-solid fa-check-circle"></i> Thành công!</span>
+                                <button onclick="copyShortenedLink()" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium">Sao chép</button>
+                            </div>
+                            <input type="text" id="test-result-url" readonly class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: DEVELOPERS API -->
+            <div id="tab-api-config" class="tab-content space-y-6 hidden">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="text-xl font-bold text-white mb-1">Developers API</h2>
+                        <p class="text-sm text-slate-400">Bảng điều khiển & quản lý Token cá nhân của bạn trên Link4m</p>
+                    </div>
+
+                    <!-- API Token Display Box -->
+                    <div class="bg-emerald-950/30 border border-emerald-500/40 rounded-2xl p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-sm font-bold text-emerald-400 flex items-center space-x-2">
+                                <i class="fa-solid fa-key"></i>
+                                <span>Your API token:</span>
+                            </label>
+                            <button onclick="copyApiToken()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg font-medium transition flex items-center space-x-1.5">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Copy Token</span>
                             </button>
                         </div>
-                        <p class="text-[11px] text-gray-400"><i class="fa-solid fa-lock text-cyan-400"></i> Key này được sinh ngẫu nhiên hoàn toàn không trùng lặp và chỉ hoạt động duy nhất trên thiết bị (HWID) này.</p>
+                        <div class="relative">
+                            <input type="text" id="api-token-input" readonly value="6aa64917139ec42c1a275465" class="w-full bg-slate-950 border border-emerald-500/30 rounded-xl px-4 py-3 text-sm font-mono text-emerald-300 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- API Docs Explanation -->
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <p>For developers Link4m prepared <strong>API</strong> which returns responses in <strong>JSON</strong></p>
+                        <p>Currently there is one method which can be used to shorten links on behalf of your account.</p>
+                        <p class="font-medium text-slate-200">All you have to do is to send a <strong>GET</strong> request with your API token and URL Like the following:</p>
+
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-indigo-300 overflow-x-auto">
+                            https://link4m.co/api-shorten/v2?api=6aa64917139ec42c1a275465&url=yourdestinationlink.com
+                        </div>
+
+                        <p class="font-medium text-slate-200">You will get a JSON response like the following</p>
+
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-emerald-300 overflow-x-auto">
+                            {"status":"success","shortenedUrl":"https:\/\/link4m.co\/xxxxxx"}
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- EXTERNAL GET KEY PAGE SIMULATION (Dùng chung 1 file nhưng ẩn hiện giao diện mô phỏng trang get key bên thứ 3) -->
-        <section id="view-external-getpage" class="view-section hidden py-16">
-            <div class="max-w-md mx-auto cyber-border p-8 rounded-3xl space-y-6 text-center">
-                <div class="w-16 h-16 mx-auto rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 text-2xl animate-pulse">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div class="space-y-2">
-                    <h2 class="font-orbitron font-black text-xl text-white">TRANG TRUNG CHUYỂN GET KEY</h2>
-                    <p class="text-xs text-gray-400">Vui lòng chờ đếm ngược 5 giây hoặc hoàn thành xác thực chống bot để lấy quyền chuyển về web chính.</p>
-                </div>
-                <div id="countdown-timer" class="font-orbitron font-black text-4xl text-cyan-400">5</div>
-                <button id="btn-complete-external" disabled onclick="completeExternalTask()" class="w-full py-4 rounded-xl bg-gray-700 text-gray-500 font-orbitron font-bold text-xs tracking-wider cursor-not-allowed transition">
-                    ĐANG XÁC THỰC VƯỢT LINK...
-                </button>
-            </div>
-        </section>
+            <!-- TAB 3: KEY GENERATOR & DISCORD NOTIFICATION -->
+            <div id="tab-key-generator" class="tab-content space-y-6 hidden">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="text-xl font-bold text-white mb-1">Quản lý Key & Bot Discord</h2>
+                        <p class="text-sm text-slate-400">Xem thông báo vượt key thời gian thực từ Bot T HUB</p>
+                    </div>
 
-        <!-- VIEW: DEVICE MANAGEMENT -->
-        <section id="view-device" class="view-section hidden py-8">
-            <div class="max-w-3xl mx-auto space-y-8">
-                <div class="text-center space-y-3">
-                    <h2 class="font-orbitron font-black text-3xl sm:text-4xl text-white">QUẢN LÝ THIẾT BỊ & HWID</h2>
-                    <p class="text-gray-400 text-sm">Kiểm tra thông tin định danh trình duyệt và trạng thái key của thiết bị này.</p>
-                </div>
+                    <!-- Discord Notification Preview Card -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 relative overflow-hidden space-y-4">
+                        <div class="absolute top-0 right-0 px-3 py-1 bg-indigo-500/10 text-indigo-400 text-xs font-semibold rounded-bl-xl border-l border-b border-indigo-500/20">
+                            Discord Webhook Live Feed
+                        </div>
+                        
+                        <div class="flex items-start space-x-3 pt-2">
+                            <div class="w-10 h-10 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
+                                <i class="fa-brands fa-discord text-xl"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-sm text-white">Bot T HUB</span>
+                                    <span class="text-xs bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded font-mono">#nhật-ký-key</span>
+                                    <span class="text-xs text-slate-500">· 
+                                        <script>
+                                            const d = new Date();
+                                            document.write(d.getHours() + ':' + (d.getMinutes()<10?'0':'') + d.getMinutes());
+                                        </script>
+                                    </span>
+                                </div>
+                                <div class="text-sm text-slate-200 bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-1 shadow-inner">
+                                    <p class="font-bold text-amber-400">👑 **Có người vượt Key thành công!**</p>
+                                    <p class="text-slate-300 font-mono text-xs">- **Username:** <span class="text-indigo-300 bg-indigo-950/60 px-1.5 py-0.5 rounded">202Huy115</span></p>
+                                    <p class="text-slate-300 font-mono text-xs">- **IP Address:** <span class="text-emerald-300 bg-emerald-950/60 px-1.5 py-0.5 rounded">113.161.xx.xx</span></p>
+                                    <p class="text-slate-300 font-mono text-xs">- **Time:** <span class="text-slate-400">Hôm nay, 21:25</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="cyber-border p-6 sm:p-8 rounded-3xl space-y-6">
-                    <div class="flex items-center justify-between border-b border-cyber-600/50 pb-4">
-                        <h3 class="font-orbitron font-bold text-lg text-white flex items-center gap-2">
-                            <i class="fa-solid fa-fingerprint text-cyan-400"></i> Thông Tin Phần Cứng Thiết Bị
+                    <!-- Live Key Generator simulator -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+                        <h3 class="text-sm font-bold text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-key text-indigo-400"></i>
+                            <span>Tạo Link Vượt Key Mới cho Script/Tool</span>
                         </h3>
-                        <span class="text-xs bg-green-500/10 text-green-400 px-3 py-1 rounded-full border border-green-500/30">Active HWID</span>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="p-4 rounded-2xl bg-cyber-800/80 border border-cyber-600/50 space-y-1">
-                            <span class="text-xs text-gray-400">Mã Định Danh HWID</span>
-                            <div id="dev-hwid" class="font-orbitron font-bold text-cyan-300 text-sm">TH-DEV-99A8F1</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1">Tên Script / Dự án:</label>
+                                <input type="text" id="script-name" value="Blox Fruit Hub V3" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1">Thời hạn Key:</label>
+                                <select id="key-duration" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                                    <option value="24">24 Giờ (1 Ngày)</option>
+                                    <option value="48">48 Giờ (2 Ngày)</option>
+                                    <option value="168">7 Ngày (1 Tuần)</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="p-4 rounded-2xl bg-cyber-800/80 border border-cyber-600/50 space-y-1">
-                            <span class="text-xs text-gray-400">Trạng Thái Get Key Link</span>
-                            <div id="dev-link-status" class="font-orbitron font-bold text-yellow-400 text-sm">Chưa hoàn thành</div>
+                        <button onclick="generateKeySystemLink()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium py-2.5 rounded-xl text-sm transition shadow-lg shadow-indigo-600/20">
+                            Tạo Link Vượt Key (Qua Link4m API)
+                        </button>
+                        <div id="generated-key-box" class="hidden p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs font-mono text-indigo-300 break-all">
+                            <!-- Generated Link will appear here -->
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- VIEW: ADMIN DASHBOARD -->
-        <section id="view-admin" class="view-section hidden py-8">
-            <div class="space-y-8">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <h2 class="font-orbitron font-black text-3xl text-white">TRANG QUẢN TRỊ ADMIN</h2>
-                        <p class="text-gray-400 text-sm">Quản lý toàn bộ key ngẫu nhiên đã cấp cho từng thiết bị.</p>
+            <!-- TAB 4: PHP SAMPLE & DOCUMENTATION -->
+            <div id="tab-php-sample" class="tab-content space-y-6 hidden">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                    <div class="border-b border-slate-800 pb-4">
+                        <h2 class="text-xl font-bold text-white mb-1">Using the API in PHP</h2>
+                        <p class="text-sm text-slate-400">Sample implementation using file_get_contents or cURL</p>
                     </div>
-                    <button onclick="renderAdminTable()" class="px-5 py-2.5 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 font-orbitron font-bold text-xs hover:bg-cyan-500/30 transition">
-                        <i class="fa-solid fa-rotate mr-1"></i> Làm mới dữ liệu
-                    </button>
-                </div>
 
-                <div class="cyber-border rounded-3xl overflow-hidden shadow-2xl">
-                    <div class="p-6 border-b border-cyber-600/50 flex items-center justify-between">
-                        <h3 class="font-orbitron font-bold text-lg text-white"><i class="fa-solid fa-key text-cyan-400 mr-2"></i> Danh Sách Key & Thiết Bị (HWID)</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-cyber-800/80 border-b border-cyber-600/50 text-[11px] font-orbitron text-cyan-400 uppercase tracking-wider">
-                                    <th class="p-4">Key Bản Quyền (Duy Nhất)</th>
-                                    <th class="p-4">HWID Thiết Bị</th>
-                                    <th class="p-4">Trạng Thái Link</th>
-                                    <th class="p-4 text-right">Thao Tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-keys-tbody" class="divide-y divide-cyber-600/30 text-sm text-gray-300">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
+                    <p class="text-sm text-slate-300">
+                        To use the API in your PHP application, you need to send a GET request via <code>file_get_contents</code> or <code>cURL</code>. Please check the below sample examples using <code>file_get_contents</code>
+                    </p>
+
+                    <!-- PHP Code Block -->
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 relative overflow-hidden group">
+                        <div class="absolute top-3 right-3">
+                            <button onclick="copyPhpCode()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg transition font-mono flex items-center space-x-1.5">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Copy Code</span>
+                            </button>
+                        </div>
+                        <pre class="font-mono text-xs text-indigo-300 overflow-x-auto leading-relaxed pt-2" id="php-code-snippet"><code>$long_url = urlencode('yourdestinationlink.com');
+$api_token = '6aa64917139ec42c1a275465';
+$api_url = "https://link4m.co/api-shorten/v2?api={$api_token}&url={$long_url}";
+$result = @json_decode(file_get_contents($api_url), TRUE);
+if($result["status"] !== 'success') {
+    echo $result["message"];
+} else {
+    echo $result["shortenedUrl"];
+}</code></pre>
                     </div>
                 </div>
             </div>
-        </section>
 
-    </main>
-
-    <!-- AUTH MODAL -->
-    <div id="auth-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
-        <div class="cyber-border p-8 rounded-3xl w-full max-w-md relative space-y-6">
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-cyan-400 text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <div class="text-center space-y-2">
-                <h3 class="font-orbitron font-black text-2xl text-white">ĐĂNG NHẬP QUẢN TRỊ</h3>
-                <p class="text-xs text-gray-400">Truy cập bảng điều khiển Admin</p>
-            </div>
-
-            <div class="space-y-4">
-                <div class="space-y-1">
-                    <label class="text-xs text-gray-400 font-semibold">Tài Khoản</label>
-                    <input type="text" id="auth-username" placeholder="Nhập admin" class="w-full bg-cyber-900 border border-cyber-600 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" value="admin">
-                </div>
-                <div class="space-y-1">
-                    <label class="text-xs text-gray-400 font-semibold">Mật Khẩu</label>
-                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-cyber-900 border border-cyber-600 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500" value="admin123">
-                </div>
-                <button onclick="handleAuthSubmit()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-orbitron font-bold text-xs tracking-wider shadow-neon hover:shadow-neon-lg transition">
-                    ĐĂNG NHẬP NGAY
-                </button>
-            </div>
-        </div>
+        </main>
     </div>
 
+    <!-- JavaScript Application Logic -->
     <script>
-        // LocalStorage DB Initialization with HWID uniqueness check
-        let deviceHwId = localStorage.getItem('thub_hwid');
-        if (!deviceHwId) {
-            deviceHwId = 'TH-HWID-' + Math.random().toString(36).substring(2, 8).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-            localStorage.setItem('thub_hwid', deviceHwId);
-        }
-
-        let appState = {
-            currentUser: null,
-            hwid: deviceHwId,
-            linkCompleted: localStorage.getItem('thub_link_completed_' + deviceHwId) === 'true',
-            assignedKey: localStorage.getItem('thub_key_' + deviceHwId) || null,
-            databaseKeys: JSON.parse(localStorage.getItem('thub_db_keys') || '[]')
-        };
-
-        window.onload = function() {
-            document.getElementById('current-user-hwid').innerText = appState.hwid;
-            document.getElementById('dev-hwid').innerText = appState.hwid;
-            document.getElementById('hero-hwid-display').innerText = appState.hwid;
-            
-            updateUIAfterStateChange();
-            renderAdminTable();
-
-            // Check if returning from external link via URL parameter ?completed=true
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('completed') === 'true') {
-                appState.linkCompleted = true;
-                localStorage.setItem('thub_link_completed_' + appState.hwid, 'true');
-                
-                // Generate unique key if not already assigned
-                if (!appState.assignedKey) {
-                    appState.assignedKey = generateUniqueRandomKey();
-                    localStorage.setItem('thub_key_' + appState.hwid, appState.assignedKey);
-                    
-                    // Save to global DB list
-                    appState.databaseKeys.push({
-                        hwid: appState.hwid,
-                        key: appState.assignedKey,
-                        status: 'Completed'
-                    });
-                    localStorage.setItem('thub_db_keys', JSON.stringify(appState.databaseKeys));
-                }
-                
-                showToast('Xác thực vượt link thành công! Đã cấp key cho thiết bị.');
-                window.history.replaceState({}, document.title, window.location.pathname);
-                switchTab('getkey');
-            }
-        };
-
-        // Toast Notification
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            let icon = type === 'success' ? 'fa-circle-check text-cyan-400' : 'fa-circle-exclamation text-red-400';
-            
-            toast.className = `cyber-border px-5 py-4 rounded-2xl flex items-center space-x-3 shadow-2xl transition-all transform translate-y-2 opacity-0`;
-            toast.style.background = 'rgba(5, 11, 20, 0.95)';
-            toast.innerHTML = `<i class="fa-solid ${icon} text-lg"></i><span class="text-sm font-medium text-white">${message}</span>`;
-            
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.transform = 'translateY(0)'; toast.style.opacity = '1'; }, 10);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
-
-        // Tab Navigation
+        // Tab Switching Logic
         function switchTab(tabId) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`view-${tabId}`).classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
 
-        // Generate Non-overlapping Unique Random Key
-        function generateUniqueRandomKey() {
-            let existingKeys = appState.databaseKeys.map(k => k.key);
-            let newKey;
-            do {
-                newKey = 'TH-PRO-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-            } while (existingKeys.includes(newKey));
-            return newKey;
-        }
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/20');
+                btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-slate-800/60');
+            });
 
-        // Update UI states
-        function updateUIAfterStateChange() {
-            const linkStatusLabel = document.getElementById('getkey-status-label');
-            const taskContainer = document.getElementById('task-action-container');
-            const resultContainer = document.getElementById('result-key-container');
-            const heroStatus = document.getElementById('hero-key-status');
-            const heroBadge = document.getElementById('hero-key-badge');
-            const devLinkStatus = document.getElementById('dev-link-status');
-
-            if (appState.linkCompleted && appState.assignedKey) {
-                linkStatusLabel.className = 'text-xs font-semibold bg-green-500/20 text-green-400 px-3 py-1 rounded-full border border-green-500/30';
-                linkStatusLabel.innerText = 'Đã hoàn thành link';
-                taskContainer.classList.add('hidden');
-                resultContainer.classList.remove('hidden');
-                document.getElementById('generated-key-input').value = appState.assignedKey;
-
-                heroStatus.innerText = 'Đã có Key';
-                heroStatus.className = 'font-orbitron font-bold text-sm text-green-400';
-                heroBadge.innerText = 'Active';
-                heroBadge.className = 'text-xs text-green-400 bg-green-500/10 px-2.5 py-1 rounded-full';
-
-                devLinkStatus.innerText = 'Đã hoàn thành';
-                devLinkStatus.className = 'font-orbitron font-bold text-sm text-green-400';
-            } else {
-                linkStatusLabel.className = 'text-xs font-semibold bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full';
-                linkStatusLabel.innerText = 'Chưa hoàn thành';
-                taskContainer.classList.remove('hidden');
-                resultContainer.classList.add('hidden');
-
-                heroStatus.innerText = 'Chưa có key';
-                heroStatus.className = 'font-orbitron font-bold text-sm text-yellow-400';
-                heroBadge.innerText = 'Cần Get Key';
-                heroBadge.className = 'text-xs text-yellow-400 bg-yellow-500/10 px-2.5 py-1 rounded-full';
-
-                devLinkStatus.innerText = 'Chưa hoàn thành';
-                devLinkStatus.className = 'font-orbitron font-bold text-sm text-yellow-400';
+            const activeBtn = document.querySelector(`[data-target="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-slate-800/60');
+                activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-lg', 'shadow-indigo-600/20');
             }
         }
 
-        // External Link Get Key Workflow Simulation
-        function openExternalGetLink() {
-            showToast('Đang chuyển hướng sang trang web Get Key...');
-            switchTab('external-getpage');
-            
-            // Start countdown timer simulation on external page
-            let timeLeft = 5;
-            const timerEl = document.getElementById('countdown-timer');
-            const btnComplete = document.getElementById('btn-complete-external');
-            btnComplete.disabled = true;
-            btnComplete.className = 'w-full py-4 rounded-xl bg-gray-700 text-gray-500 font-orbitron font-bold text-xs tracking-wider cursor-not-allowed transition';
-            btnComplete.innerText = 'VUI LÒNG CHỜ XÁC THỰC...';
-
-            let countdownInterval = setInterval(() => {
-                timeLeft--;
-                timerEl.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    timerEl.innerText = '✓';
-                    btnComplete.disabled = false;
-                    btnComplete.className = 'w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-orbitron font-bold text-xs tracking-wider shadow-neon cursor-pointer transition';
-                    btnComplete.innerText = 'HOÀN THÀNH & TRỞ VỀ WEB CHÍNH';
-                }
-            }, 1000);
+        // Theme Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-sun';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-moon';
+            }
         }
 
-        function completeExternalTask() {
-            showToast('Đã vượt link thành công! Đang quay lại trang chính...');
-            setTimeout(() => {
-                window.location.href = window.location.pathname + '?completed=true';
-            }, 1000);
-        }
-
-        // Clipboard Copy
-        function copyGeneratedKey() {
-            let input = document.getElementById('generated-key-input');
-            input.select();
+        // Copy API Token
+        function copyApiToken() {
+            const tokenInput = document.getElementById('api-token-input');
             document.execCommand('copy');
-            showToast('Đã sao chép key bản quyền!');
+            // Fallback copy using older method/clipboard
+            const range = document.createRange();
+            range.selectNode(tokenInput);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            
+            showToast('Đã sao chép API Token vào clipboard!');
         }
 
-        function copyHwId() {
-            navigator.clipboard ? navigator.clipboard.writeText(appState.hwid) : alert(appState.hwid);
-            showToast('Đã sao chép mã HWID thiết bị!');
+        // Copy PHP Code
+        function copyPhpCode() {
+            const codeText = document.getElementById('php-code-snippet').innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            
+            showToast('Đã sao chép đoạn mã PHP mẫu!');
         }
 
-        // Auth & Admin Functions
-        function openAuthModal() {
-            document.getElementById('auth-modal').classList.remove('hidden');
-            document.getElementById('auth-modal').classList.add('flex');
-        }
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
-            document.getElementById('auth-modal').classList.remove('flex');
-        }
-
-        function handleAuthSubmit() {
-            let user = document.getElementById('auth-username').value.trim();
-            let pass = document.getElementById('auth-password').value.trim();
-
-            if (user === 'admin' && pass === 'admin123') {
-                appState.currentUser = { username: 'admin', role: 'admin' };
-                showToast('Đăng nhập quản trị thành công!');
-                closeAuthModal();
-                document.getElementById('nav-admin-btn').classList.remove('hidden');
-                switchTab('admin');
-                renderAdminTable();
-            } else {
-                showToast('Tài khoản hoặc mật khẩu quản trị không đúng!', 'error');
-            }
-        }
-
-        function renderAdminTable() {
-            const tbody = document.getElementById('admin-keys-tbody');
-            tbody.innerHTML = '';
-
-            if (appState.databaseKeys.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-500">Chưa có thiết bị nào hoàn thành link get key.</td></tr>`;
+        // Simulate Link Shortening
+        function simulateShorten() {
+            const dest = document.getElementById('test-destination').value;
+            if(!dest) {
+                showToast('Vui lòng nhập link đích hợp lệ!');
                 return;
             }
 
-            appState.databaseKeys.forEach((item, index) => {
-                let tr = document.createElement('tr');
-                tr.className = 'hover:bg-cyber-800/40 transition';
-                tr.innerHTML = `
-                    <td class="p-4 font-orbitron font-bold text-cyan-400">${item.key}</td>
-                    <td class="p-4 text-xs font-mono text-gray-300">${item.hwid} ${item.hwid === appState.hwid ? '<span class="text-cyan-400">(Thiết bị này)</span>' : ''}</td>
-                    <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-500/10 text-green-400 border border-green-500/30">${item.status}</span></td>
-                    <td class="p-4 text-right">
-                        <button onclick="deleteAdminKey(${index})" class="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 text-xs"><i class="fa-solid fa-trash"></i> Xóa</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+            const resultBox = document.getElementById('test-result-box');
+            const resultUrl = document.getElementById('test-result-url');
+
+            // Generate mock shortened link based on Link4m format
+            const randomHash = Math.random().toString(36).substring(2, 8);
+            resultUrl.value = `https://link4m.co/${randomHash}`;
+            resultBox.classList.remove('hidden');
+
+            // Update stats
+            const totalLinksElem = document.getElementById('stat-total-links');
+            totalLinksElem.innerText = parseInt(totalLinksElem.innerText.replace(',', '')) + 1;
+
+            showToast('Rút gọn link thành công qua Link4m API!');
         }
 
-        function deleteAdminKey(index) {
-            let item = appState.databaseKeys[index];
-            if (item.hwid === appState.hwid) {
-                localStorage.removeItem('thub_link_completed_' + appState.hwid);
-                localStorage.removeItem('thub_key_' + appState.hwid);
-                appState.linkCompleted = false;
-                appState.assignedKey = null;
-            }
-            appState.databaseKeys.splice(index, 1);
-            localStorage.setItem('thub_db_keys', JSON.stringify(appState.databaseKeys));
-            renderAdminTable();
-            updateUIAfterStateChange();
-            showToast('Đã xóa key và reset trạng thái thiết bị.');
+        function copyShortenedLink() {
+            const resultUrl = document.getElementById('test-result-url');
+            resultUrl.select();
+            document.execCommand('copy');
+            showToast('Đã sao chép link rút gọn!');
+        }
+
+        // Generate Key System Link
+        function generateKeySystemLink() {
+            const scriptName = document.getElementById('script-name').value;
+            const duration = document.getElementById('key-duration').value;
+            const genBox = document.getElementById('generated-key-box');
+
+            const mockKeyId = Math.random().toString(36).substring(2, 10).toUpperCase();
+            genBox.innerHTML = `Link Vượt Key (${scriptName} - Hạn ${duration}h):<br><span class="text-emerald-400 font-bold">https://thub-key.site/get-key?token=6aa64917&key=${mockKeyId}</span>`;
+            genBox.classList.remove('hidden');
+
+            showToast('Tạo link vượt key hệ thống thành công!');
+        }
+
+        // Toast Notification System
+        function showToast(message) {
+            const existingToast = document.getElementById('custom-toast');
+            if(existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'custom-toast';
+            toast.className = 'fixed bottom-6 right-6 bg-slate-900 border border-indigo-500/40 text-white px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center space-x-3 animate-bounce';
+            toast.innerHTML = `
+                <div class="w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-xs text-white">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <span class="text-sm font-medium">${message}</span>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
         }
     </script>
 </body>
