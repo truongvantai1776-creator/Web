@@ -32,10 +32,11 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 selection:bg-indigo-500 selection:text-white">
 
+    <!-- Main Container -->
     <div id="main-card" class="w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-2xl p-8 glow-effect text-center relative overflow-hidden transition-all duration-300">
         
-        <!-- Top decorative badge / timer indicator -->
-        <div class="absolute top-4 right-4 text-xs font-mono text-slate-500 bg-slate-800/50 px-2.5 py-1 rounded-full border border-slate-700/50">
+        <!-- Timer indicator -->
+        <div id="timer-badge" class="absolute top-4 right-4 text-xs font-mono text-slate-500 bg-slate-800/50 px-2.5 py-1 rounded-full border border-slate-700/50">
             <i class="fa-regular fa-clock mr-1 text-indigo-400"></i><span id="countdown">30:00</span>
         </div>
 
@@ -44,44 +45,71 @@
                 <i class="fa-solid fa-key text-white text-2xl"></i>
             </div>
             <h1 class="text-2xl font-bold tracking-tight text-white mb-1">T HUB Key System</h1>
-            <p class="text-sm text-slate-400">Your secure access key has been generated.</p>
+            <p id="sub-title" class="text-sm text-slate-400">Your secure access key has been generated.</p>
         </div>
 
-        <div class="mb-6 relative group">
+        <!-- Key View Box -->
+        <div id="key-section" class="mb-6 relative group">
             <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl blur opacity-30 group-hover:opacity-60 transition duration-300"></div>
             <div class="relative bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
                 <span id="key-text" class="font-mono text-sm md:text-base text-indigo-300 tracking-wider font-semibold truncate mr-2 select-all">Loading...</span>
             </div>
         </div>
 
-        <div>
+        <!-- Blocked View Box (Hidden by default) -->
+        <div id="blocked-section" class="hidden mb-6 bg-rose-950/30 border border-rose-900/50 rounded-xl p-5 text-center">
+            <div class="w-12 h-12 bg-rose-500/20 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="fa-solid fa-ban text-xl"></i>
+            </div>
+            <h3 class="text-base font-semibold text-rose-400 mb-1">Access Denied</h3>
+            <p class="text-xs text-slate-300 mb-4 leading-relaxed">Bạn cần phải vượt qua liên kết Link4m hợp lệ mới có thể nhận được Key!</p>
+            <a href="https://link4m.com/st?api=6aa64917139ec42c1a275465&url=https://truongvantai1776-creator.github.io/T-HUB/" class="inline-block w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-rose-600/30">
+                <i class="fa-solid fa-arrow-right-to-bracket mr-1.5"></i> Vượt Link Lấy Key Ngay
+            </a>
+        </div>
+
+        <!-- Copy Button -->
+        <div id="action-section">
             <button onclick="copyKey()" id="copy-btn" class="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium rounded-xl shadow-lg shadow-indigo-600/30 active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2 cursor-pointer">
                 <i class="fa-regular fa-copy text-lg"></i>
                 <span id="copy-text">Copy Key</span>
             </button>
         </div>
 
+        <!-- Toast Notification -->
         <div id="toast" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-16 opacity-0 bg-emerald-600 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow-lg transition-all duration-300 flex items-center space-x-1.5">
             <i class="fa-solid fa-check"></i>
             <span>Copied to clipboard!</span>
         </div>
     </div>
 
+    <!-- Expired Modal -->
     <div id="expired-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full text-center">
             <div class="w-12 h-12 bg-rose-500/10 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fa-solid fa-triangle-exclamation text-xl"></i>
             </div>
             <h2 class="text-xl font-bold text-white mb-2">Session Expired</h2>
-            <p class="text-sm text-slate-400 mb-6">This key session has timed out after 30 minutes for security reasons. Closing window...</p>
+            <p class="text-sm text-slate-400 mb-6">This key session has timed out after 30 minutes for security reasons.</p>
             <button onclick="window.location.reload()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium rounded-xl transition-colors">
-                Generate New Key
+                Reload Session
             </button>
         </div>
     </div>
 
     <script>
-        // Generate a completely unique, secure random key every time the page loads
+        // Check if user came from Link4m referrer or test query parameter
+        function verifyLink4mTraffic() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bypassTest = urlParams.get('test') === 'true'; // Dùng để test: ?test=true
+            const referrer = document.referrer;
+
+            // Kiểm tra xem referrer có chứa tên miền link4m hoặc bật mode test không
+            const isFromLink4m = bypassTest || (referrer && (referrer.includes('link4m') || referrer.includes('link4co')));
+            return isFromLink4m;
+        }
+
+        // Generate unique key
         function generateUniqueKey() {
             const part1 = Math.random().toString(36).substring(2, 8).toUpperCase();
             const part2 = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -90,14 +118,24 @@
             return `THUB-${part1}-${part2}-${part3}-${timestamp}`;
         }
 
-        // Set the unique key into the DOM on load
         window.onload = function() {
-            const uniqueKey = generateUniqueKey();
-            document.getElementById('key-text').innerText = uniqueKey;
-            startCountdown(30 * 60); // 30 minutes timer
+            const isValidTraffic = verifyLink4mTraffic();
+
+            if (isValidTraffic) {
+                // Hiện key nếu truy cập hợp lệ từ Link4m
+                const uniqueKey = generateUniqueKey();
+                document.getElementById('key-text').innerText = uniqueKey;
+                startCountdown(30 * 60); // 30 phút tự đóng
+            } else {
+                // Ẩn key và hiện bảng yêu cầu vượt link nếu truy cập trực tiếp
+                document.getElementById('key-section').classList.add('hidden');
+                document.getElementById('action-section').classList.add('hidden');
+                document.getElementById('timer-badge').classList.add('hidden');
+                document.getElementById('sub-title').innerText = "Tróc nã xác thực lưu lượng truy cập.";
+                document.getElementById('blocked-section').classList.remove('hidden');
+            }
         };
 
-        // Copy key handler using legacy execCommand fallback safely for all environments
         function copyKey() {
             const keyElement = document.getElementById('key-text');
             const textToCopy = keyElement.innerText;
@@ -109,7 +147,6 @@
             document.execCommand('copy');
             document.body.removeChild(tempInput);
 
-            // Button feedback & Toast animation
             const copyBtn = document.getElementById('copy-btn');
             const copyText = document.getElementById('copy-text');
             const toast = document.getElementById('toast');
@@ -131,7 +168,6 @@
             }, 2000);
         }
 
-        // 30 minutes auto-close countdown logic
         function startCountdown(durationInSeconds) {
             let timer = durationInSeconds;
             const countdownEl = document.getElementById('countdown');
@@ -149,17 +185,12 @@
             }, 1000);
         }
 
-        // Close or lock page when time runs out
         function triggerAutoClose() {
             document.getElementById('expired-modal').classList.remove('hidden');
             document.getElementById('expired-modal').classList.add('flex');
-            
-            // Attempt to close window (modern browsers restrict window.close unless opened by script, fallback handles overlay)
             try {
                 window.close();
-            } catch(e) {
-                console.log("Window close restricted by browser policies.");
-            }
+            } catch(e) {}
         }
     </script>
 </body>
