@@ -63,7 +63,7 @@
             </div>
             <h3 class="text-base font-semibold text-rose-400 mb-1">Access Denied</h3>
             <p class="text-xs text-slate-300 mb-4 leading-relaxed">Bạn cần phải vượt qua liên kết Link4m hợp lệ mới có thể nhận được Key!</p>
-            <a href="https://link4m.com/st?api=6aa64917139ec42c1a275465&url=https://truongvantai1776-creator.github.io/T-HUB/" class="inline-block w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-rose-600/30">
+            <a href="https://link4m.org/cPtk4F" class="inline-block w-full py-2.5 bg-rose-600 hover:bg-rose-500 text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-rose-600/30">
                 <i class="fa-solid fa-arrow-right-to-bracket mr-1.5"></i> Vượt Link Lấy Key Ngay
             </a>
         </div>
@@ -101,7 +101,7 @@
         // Check if user came from Link4m referrer or test query parameter
         function verifyLink4mTraffic() {
             const urlParams = new URLSearchParams(window.location.search);
-            const bypassTest = urlParams.get('test') === 'true'; // Dùng để test: ?test=true
+            const bypassTest = urlParams.get('test') === 'true'; // Dùng để test trực tiếp: ?test=true
             const referrer = document.referrer;
 
             // Kiểm tra xem referrer có chứa tên miền link4m hoặc bật mode test không
@@ -125,7 +125,7 @@
                 // Hiện key nếu truy cập hợp lệ từ Link4m
                 const uniqueKey = generateUniqueKey();
                 document.getElementById('key-text').innerText = uniqueKey;
-                startCountdown(30 * 60); // 30 phút tự đóng
+                startCountdown(30 * 60); // 30 phút tự đóng web
             } else {
                 // Ẩn key và hiện bảng yêu cầu vượt link nếu truy cập trực tiếp
                 document.getElementById('key-section').classList.add('hidden');
